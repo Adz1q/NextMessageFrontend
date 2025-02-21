@@ -1,74 +1,102 @@
-import NextAuth from "next-auth";
+import NextAuth, { Session, User } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
-import Github from "next-auth/providers/github";
 import axios from "axios";
 import { getUser } from "./actions";
-
-type Credentials = {
-    login: string;
-    password: string;
-}
+import { JWT } from "next-auth/jwt";
 
 type Token = {
     token: string;
+};
+
+declare module "next-auth/jwt" {
+    interface JWT {
+        id: string;
+        username: string;
+        email: string;
+        date: string;
+        profilePictureUrl: string;
+        allowMessagesFromNonFriends: boolean;
+        token: string;
+    }
 }
 
-type User = {
-    id: number;
-    username: string;
-    email: string;
-    password: string;
-    profilePictureUrl: string;
-    date: string;
-    allowMessagesFromNonFriends: boolean;
-}
+declare module "next-auth" {
+    interface Session {
+        user: {
+            id: string;
+            username: string;
+            email: string;
+            date: string;
+            profilePictureUrl: string;
+            allowMessagesFromNonFriends: boolean;
+            token: string;
+        };
+    }
 
-type UserToken = User & Token; 
+    interface User {
+        id: string; 
+        username: string;
+        email: string;
+        date: string;
+        profilePictureUrl: string;
+        allowMessagesFromNonFriends: boolean;
+        token: string;
+    }
+}
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
     providers: [
-        Github,
         Credentials({
             credentials: {
                 login: { label: "Login", type: "text" },
                 password: { label: "Password", type: "password" },
             },
-            async authorize({ login, password }: Credentials) {
+            authorize: async (credentials) => {
                 try {
+                    if (credentials === undefined) {
+                        throw new Error("You must provide credentials");
+                    }
+
+                    const login: string = credentials.login as string;
+                    const password: string = credentials.password as string;
+
                     const api = axios.create({
-                        baseURL: "http://localhost:3000/api/v1/user",
+                        baseURL: "http://localhost:8080/api/v1/user",
                         headers: { "Content-Type": "application/json" },
                     });
 
-                    const response = await api.post<Token>("/login", { 
+                    const loginResponse = await api.post<Token>("/login", { 
                         login: login, 
-                        password: password, 
+                        password: password,
                     });
 
-                    if (!response || !response.data) {
-                        throw new Error(response.statusText);
+                    if (!loginResponse || !loginResponse.data) {
+                        throw new Error(loginResponse.statusText);
                     }
 
-                    const { token } = response.data;
-                    const user = await getUser(login, response.data.token);
+                    const { token } = loginResponse.data;
 
-                    if (!user.success) {
-                        throw new Error(user.error);
+                    if (!token) {
+                        throw new Error("Token not found in response");
                     }
 
-                    if (token) {
-                        return {
-                            id: user.data.id,
-                            username: user.username,
-                            email: user.email,
-                            profilePictureUrl: user.profilePictureUrl,
-                            token: token,
-                        };
+                    const userResponse = await getUser(login, token);
+
+                    if (!userResponse.success) {
+                        throw new Error(userResponse.error);
                     }
 
-                    return null;
+                    return {
+                        id: String(userResponse.data.id),
+                        username: userResponse.data.username,
+                        email: userResponse.data.email,
+                        date: userResponse.data.date,
+                        profilePictureUrl: userResponse.data.profilePictureUrl,
+                        allowMessagesFromNonFriends: userResponse.data.allowMessagesFromNonFriends,
+                        token: token,
+                    };
                 }
-                catch (error) {
+                catch (error: unknown) {
                     console.log(error);
                     return null;
                 }
@@ -79,20 +107,30 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         strategy: "jwt",
     },
     callbacks: {
-        async jwt({ token, user }: { token: UserToken, user: UserToken }) {
+        jwt: async ({ token, user }: { token: JWT, user: User }) => {
             if (user) {
-                token.id = user.id;
+                token.id = user.id as string;
                 token.username = user.username;
+                token.email = user.email as string;
+                token.date = user.date;
+                token.profilePictureUrl = user.profilePictureUrl;
+                token.allowMessagesFromNonFriends = user.allowMessagesFromNonFriends;
                 token.token = user.token;
             }
 
             return token;
         },
-        async session({ session, token }) {
-            session.token = token.accessToken;
-            session.username = token.username;
-            session.userId = token.id;
-            
+        session: async ({ session, token }: { session: Session, token: JWT }) => {
+            session.user = {
+                id: token.id,
+                username: token.username,
+                email: token.email,
+                date: token.date,
+                profilePictureUrl: token.profilePictureUrl,
+                allowMessagesFromNonFriends: token.allowMessagesFromNonFriends,
+                token: token.token,
+            };
+
             return session;
         },
     },

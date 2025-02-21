@@ -8,17 +8,13 @@ type User = {
     profilePictureUrl: string;
     date: string;
     allowMessagesFromNonFriends: boolean;
-}
+};
 
-type ApiResponse<T> = {
-    success: boolean;
-    data?: T;
-    error?: string;
-}
+type ApiResponse<T> = { success: true; data: T; } | { success: false; error: string; }; 
 
-export const getUser = async <User>(login: string, token: string): Promise<ApiResponse<User>> => {
+export const getUser = async (login: string, token: string): Promise<ApiResponse<User>> => {
     try {
-        const response = await axios.get<User>(`http://localhost:3000/api/v1/user/${login}`, {
+        const response = await axios.get<User>(`http://localhost:8080/api/v1/user/get/${login}`, {
             headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -27,7 +23,7 @@ export const getUser = async <User>(login: string, token: string): Promise<ApiRe
             data: response.data,
         };
     }
-    catch (error) {
+    catch (error: unknown) {
         const responseError = error as AxiosError;
 
         return {
