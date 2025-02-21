@@ -1,5 +1,5 @@
 export default function Home() {
   return (
-      <div>Hello Piesek! And oliwka</div>
+      <div>hejkacsacssssssssscsacssssssssssssScsaciema ale to nie dizałassssss czemuuuuusssssssssssssvssaaaaaaasssssssssssaaaaa</div>
   );
 }
