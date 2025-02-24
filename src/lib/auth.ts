@@ -1,7 +1,7 @@
 import NextAuth, { Session, User } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import axios from "axios";
-import { getUser } from "./actions";
+import { getUser } from "./api-requests";
 import { JWT } from "next-auth/jwt";
 
 type Token = {
@@ -34,9 +34,9 @@ declare module "next-auth" {
     }
 
     interface User {
-        id: string; 
+        id?: string; 
         username: string;
-        email: string;
+        email?: string | null;
         date: string;
         profilePictureUrl: string;
         allowMessagesFromNonFriends: boolean;

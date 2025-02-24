@@ -1,5 +1,6 @@
 import { auth } from "@/lib/auth";
 import { Session } from "next-auth";
+import { signOut } from "next-auth/react";
 
 export default async function Home() {
   const session: Session | null = await auth();
@@ -14,6 +15,9 @@ export default async function Home() {
           <div>{session?.user?.profilePictureUrl}</div>
           <div>{session?.user?.allowMessagesFromNonFriends}</div>
           <div>{session?.user?.token}</div>
+          {session?.user?.token && 
+            <button onClick={signOut}>Logout</button>
+          }
       </div>
   );
 }
