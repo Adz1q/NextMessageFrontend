@@ -10,7 +10,7 @@ import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import { Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { register } from "@/lib/actions";
+import { signUp } from "@/lib/actions";
 import { signIn } from "next-auth/react";
 
 const formSchema = z.object({
@@ -52,7 +52,7 @@ export default function SignUpForm() {
     });
 
     const onSubmit = async (data: z.infer<typeof formSchema>) => {
-        const registerResponse = await register(data.username, data.email, data.password);
+        const registerResponse = await signUp(data.username, data.email, data.password);
 
         if (!registerResponse.success) {
             setError(registerResponse.error);

@@ -3,7 +3,7 @@
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -128,7 +128,7 @@ export default function SignInForm() {
                 </Form>
                 <div className="flex justify-center items-center max-w-md w-full">
                     <Link href="/sign-up" className="hover:underline">
-                        Don't have an account? Sign Up
+                        Don&apos;t have an account? Sign Up
                     </Link>
                 </div>
             </div>

@@ -38,7 +38,7 @@ type ApiResponse<T> = { success: true; data: T; } | { success: false; error: str
 //     }
 // };
 
-export const register = async (username: string, email: string, password: string): Promise<ApiResponse<null>> => {
+export const signUp = async (username: string, email: string, password: string): Promise<ApiResponse<null>> => {
     try {
         const response = await api.post("/user/register", {
             username: username,
