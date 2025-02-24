@@ -34,7 +34,7 @@ const formSchema = z.object({
 });
 
 export default function RegisterForm() {
-    const [error, setError] = useState<string>("Registration successful, but automatic login failed. Try logging in manually.");
+    const [error, setError] = useState<string>("");
     const [showPassword, setShowPassword] = useState<boolean>(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false);
     
