@@ -3,7 +3,7 @@
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -33,8 +33,9 @@ const formSchema = z.object({
     path: ["confirmPassword"], 
 });
 
-export default function RegisterForm() {
+export default function SignUpForm() {
     const [error, setError] = useState<string>("");
+    const [success, setSuccess] = useState<string>("");
     const [showPassword, setShowPassword] = useState<boolean>(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false);
     
@@ -66,7 +67,7 @@ export default function RegisterForm() {
             });
 
             if (!loginResponse || !loginResponse.ok) {
-                router.push("/login");
+                throw new Error("Something went wrong with auto-login, please sign in manually");
             }
 
             setError("");
@@ -74,9 +75,10 @@ export default function RegisterForm() {
         }
         catch (error: unknown) {
             const responseError = error as Error;
-            
-            console.log(error);
-            setError(responseError.message);
+
+            console.log(responseError);
+            setSuccess("Account created, please sign in to continue");
+            router.push("/sign-in");
         }
     };
 
@@ -182,14 +184,17 @@ export default function RegisterForm() {
                                 </FormItem>
                             }}
                         />
-                        <Button type="submit" className="w-full">Register</Button>
+                        <Button type="submit" className="w-full">Sign Up</Button>
                         {error && <div className="flex justify-center items-center">
                             <div className="text-red-900 font-medium">{error}</div>
+                        </div>}
+                        {success && <div className="flex justify-center items-center">
+                            <div className="text-green-700 font-medium">{success}</div>
                         </div>}
                     </form>
                 </Form>
                 <div className={"flex justify-center items-center max-w-md w-full"}>
-                    <Link href="/login" className="hover:underline">Already have an account? Sign In</Link>
+                    <Link href="/sign-in" className="hover:underline">Already have an account? Sign In</Link>
                 </div>
             </div>
         </div>

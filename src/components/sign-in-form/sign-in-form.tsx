@@ -21,7 +21,7 @@ const formSchema = z.object({
     .max(32, { message: "Password cannot be longer than 32 characters"}),
 });
 
-export default function LoginForm() {
+export default function SignInForm() {
     const [error, setError] = useState<string>("");
     const [showPassword, setShowPassword] = useState<boolean>(false);
     
@@ -120,14 +120,14 @@ export default function LoginForm() {
                                 </FormItem>
                             }}
                         />
-                        <Button type="submit" className="w-full">Login</Button>
+                        <Button type="submit" className="w-full">Sign In</Button>
                         {error && <div className="flex justify-center items-center">
                             <div className="text-red-900 font-medium">{error}</div>    
                         </div>}
                     </form>
                 </Form>
                 <div className="flex justify-center items-center max-w-md w-full">
-                    <Link href="/register" className="hover:underline">
+                    <Link href="/sign-up" className="hover:underline">
                         Don't have an account? Sign Up
                     </Link>
                 </div>
