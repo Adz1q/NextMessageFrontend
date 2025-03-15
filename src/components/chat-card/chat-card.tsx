@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Avatar, AvatarImage } from "../ui/avatar";
 import { useEffect, useState } from "react";
+import { Button } from "../ui/button";
 
 type Chat = {
     id: number;
@@ -90,16 +91,19 @@ export default function ChatCard({ chat }: {
     }, []);
 
     return (
-        <Link href={`/dashboard/${chat.type}-chat/${chat.id}`} className="w-full p-2">
-            <div className="flex items-center justify-start gap-4">
-                <Avatar>
-                    <AvatarImage src={chat.profilePictureUrl} alt={chat.name} />
-                </Avatar>
-                <div className="flex flex-col gap-1">
-                    <div className="font-bold text-md text-foreground">{chat.name}</div>
-                    <div className="text-sm text-muted-foreground">{displayedDate}</div>
+        <Link href={`/dashboard/${chat.type}-chat/${chat.id}`} className="w-full rounded">
+            <Button variant="ghost" className="flex justify-start p-2 h-full w-full">
+                <div className="flex items-center justify-start gap-4">
+                    <Avatar>
+                        <AvatarImage src={chat.profilePictureUrl} alt={chat.name} />
+                    </Avatar>
+                    <div className="flex flex-col gap-1">
+                        <div className="flex justify-start font-bold text-md text-foreground">{chat.name}</div>
+                        <div className="flex justify-start text-sm text-muted-foreground">{displayedDate}</div>
+                    </div>
                 </div>
-            </div>
+            </Button>
+            
         </Link>
     );
-} 
+}

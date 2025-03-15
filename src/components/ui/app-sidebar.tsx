@@ -42,27 +42,29 @@ export function AppSidebar({ session }: {
 
     return (
       <Sidebar>
-        <SidebarHeader>
+        <SidebarHeader className="pb-4">
             <div className="flex items-center justify-between gap-2 w-full">
-                <SidebarTrigger />
+                <SidebarTrigger/>
                 <div className="text-muted-foreground text-md ml-auto mr-auto font-bold">NextMessage</div>
             </div>
-            <div className="flex items-center justify-between gap-2 w-full">
-                <Link href="/dashboard/settings">
-                    <Button variant="ghost" size="icon" className="w-10 h-10">
-                        <Settings />
+            <div className="flex flex-col gap-2 pt-2 w-full">
+                <Link href="/dashboard" className="w-full">
+                    <Button variant="ghost" className="flex justify-start text-md w-full">
+                        <Search />
+                        Search    
                     </Button>
                 </Link>
-                <Link href="/dashboard">
-                    <Button variant="ghost" size="icon" className="w-10 h-10">
-                        <Search />    
+                <Link href="/dashboard/settings" className="w-full">
+                    <Button variant="ghost" className="flex justify-start text-md w-full">
+                        <Settings />
+                        Settings
                     </Button>
                 </Link>
             </div>
         </SidebarHeader>
         <SidebarContent>
           <SidebarGroup>
-                <div className={"flex flex-col items-center gap-4"}>
+                <div className={"flex flex-col items-center gap-2"}>
                     {chats?.map((chat) => <ChatCard key={chat.id} chat={chat} />)}
                 </div>
           </SidebarGroup>
