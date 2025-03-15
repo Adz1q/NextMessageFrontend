@@ -1,3 +1,5 @@
+"use client";
+
 import {
     Sidebar,
     SidebarContent,
@@ -9,8 +11,35 @@ import {
 import { Search, Settings } from "lucide-react"
 import Link from "next/link"
 import { Button } from "./button"
-  
-  export function AppSidebar() {
+import UserDropdownMenu from "../user-dropdown-menu/user-dropdown-menu"
+import { useState } from "react"
+import { Session } from "next-auth"
+import { getChats } from "@/lib/api-requests"
+import ChatCard from "../chat-card/chat-card";
+
+type Chat = {
+    id: number;
+    name: string;
+    lastUpdated: string;
+    profilePictureUrl: string;
+    type: string;
+};
+
+export function AppSidebar({ session }: { 
+    session: Session | null
+}) {
+    const [chats, setChats] = useState<Chat[] | null>(null);
+
+    useState(async () => {
+        const response = await getChats(session?.user?.id as string, session?.user?.token as string);
+        
+        if (!response.success) {
+            throw new Error(response.error);
+        }
+
+        setChats(response.data);
+    });
+
     return (
       <Sidebar>
         <SidebarHeader>
@@ -32,10 +61,14 @@ import { Button } from "./button"
             </div>
         </SidebarHeader>
         <SidebarContent>
-          <SidebarGroup />
-          <SidebarGroup />
+          <SidebarGroup>
+                <div className={"flex flex-col items-center gap-4"}>
+                    {chats?.map((chat) => <ChatCard key={chat.id} chat={chat} />)}
+                </div>
+          </SidebarGroup>
         </SidebarContent>
         <SidebarFooter>
+            <UserDropdownMenu session={session} />
         </SidebarFooter>
       </Sidebar>
     )
