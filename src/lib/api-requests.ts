@@ -27,6 +27,14 @@ type Chat = {
     type: string;
 };
 
+type ChatMember = {
+    id: number;
+    username: string;
+    profilePictureUrl: string;
+    date: string;
+    isFriend: boolean;
+}
+
 export const getUser = async (login: string, token: string): Promise<ApiResponse<User>> => {
     try {
         const response = await api.get<User>(`/user/get/${login}`, {
@@ -51,6 +59,27 @@ export const getUser = async (login: string, token: string): Promise<ApiResponse
 export const getChats = async (userId: string, token: string): Promise<ApiResponse<Chat[]>> => {
     try {
         const response = await api.get<Chat[]>(`/chat/getAll/${parseInt(userId)}`, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+
+        return {
+            success: true,
+            data: response.data,
+        }
+    }
+    catch (error: unknown) {
+        const responseError = error as AxiosError;
+
+        return {
+            success: false,
+            error: responseError.message,
+        }
+    }
+};
+
+export const getPrivateChatMember = async (chatId: number, userId: number, token: string): Promise<ApiResponse<ChatMember>> => {
+    try {
+        const response = await api.get<ChatMember>(`/chat/get/${chatId}/otherMember?userId=${userId}`, {
             headers: { Authorization: `Bearer ${token}` },
         });
 

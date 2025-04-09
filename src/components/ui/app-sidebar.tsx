@@ -7,15 +7,18 @@ import {
     SidebarGroup,
     SidebarHeader,
     SidebarTrigger,
-} from "@/components/ui/sidebar"
-import { Search, Settings } from "lucide-react"
-import Link from "next/link"
-import { Button } from "./button"
-import UserDropdownMenu from "../user-dropdown-menu/user-dropdown-menu"
-import { useState } from "react"
-import { Session } from "next-auth"
-import { getChats } from "@/lib/api-requests"
+} from "@/components/ui/sidebar";
+import { Moon, Search, Settings, Sun } from "lucide-react";
+import Link from "next/link";
+import { Button } from "./button";
+import UserDropdownMenu from "../user-dropdown-menu/user-dropdown-menu";
+import { useEffect, useState } from "react";
+import { Session } from "next-auth";
+import { getChats } from "@/lib/api-requests";
 import ChatCard from "../chat-card/chat-card";
+import { useTheme } from "next-themes";
+import { DropdownMenu } from "@radix-ui/react-dropdown-menu";
+import { DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./dropdown-menu";
 
 type Chat = {
     id: number;
@@ -29,16 +32,38 @@ export function AppSidebar({ session }: {
     session: Session | null
 }) {
     const [chats, setChats] = useState<Chat[] | null>(null);
+    const [error, setError] = useState<string | null>(null);
+    
+    const { setTheme } = useTheme();
 
-    useState(async () => {
-        const response = await getChats(session?.user?.id as string, session?.user?.token as string);
-        
-        if (!response.success) {
-            throw new Error(response.error);
-        }
+    useEffect(() => {
+        const fetchChats = async () => {
+            if (!session?.user?.id || !session?.user?.token) {
+                setError("Invalid session");
+                return;
+            }
+            try {
+                const response = await getChats(session?.user?.id, session?.user?.token);
+            
+                if (!response.success) {
+                    setError(response.error);
+                    return;
+                }
 
-        setChats(response.data);
-    });
+                setChats(response.data);
+            }
+            catch (error: unknown) {
+                setError(error instanceof Error ? error.message : "Failed to fetched chats");
+            }
+        };
+
+        fetchChats();
+
+        return () => {
+            setChats(null);
+            setError(null);
+        }       
+    }, [session?.user?.id, session?.user?.token]);
 
     return (
       <Sidebar>
@@ -60,12 +85,37 @@ export function AppSidebar({ session }: {
                         Settings
                     </Button>
                 </Link>
+                <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" className="flex justify-start text-md w-full">
+                            <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" /> Theme
+                            <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+                            <span className="sr-only">Toggle theme</span>
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                            <DropdownMenuItem onClick={() => setTheme("light")}>
+                            Light
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => setTheme("dark")}>
+                            Dark
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => setTheme("system")}>
+                            System
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
             </div>
         </SidebarHeader>
         <SidebarContent>
           <SidebarGroup>
                 <div className={"flex flex-col items-center gap-2"}>
-                    {chats?.map((chat) => <ChatCard key={chat.id} chat={chat} />)}
+                    {chats?.sort((a, b) => {
+                        const dateOne = new Date(a.lastUpdated).getTime();
+                        const dateTwo = new Date(b.lastUpdated).getTime();
+                        
+                        return dateTwo - dateOne;  
+                    }).map((chat) => <ChatCard key={chat.id} chat={chat} />)}
                 </div>
           </SidebarGroup>
         </SidebarContent>

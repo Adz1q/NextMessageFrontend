@@ -27,11 +27,17 @@ const formSchema = z.object({
         .min(5, { message: "Password must be between 5 and 32 characters" })
         .max(32, { message: "Password must be between 5 and 32 characters" }),
 }).refine((data) => {
+    return /^[a-zA-Z]/.test(data.username);
+}, {
+    message: "Username must start with a letter",
+    path: ["username"],
+}).refine((data) => {
     return data.password === data.confirmPassword;
 }, {
     message: "Passwords do not match",
     path: ["confirmPassword"], 
 });
+
 
 export default function SignUpForm() {
     const [error, setError] = useState<string>("");
