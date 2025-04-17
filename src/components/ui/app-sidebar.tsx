@@ -110,6 +110,7 @@ export function AppSidebar({ session }: {
         <SidebarContent>
           <SidebarGroup>
                 <div className={"flex flex-col items-center gap-2"}>
+                    {error && <div className="text-red-500 text-md">{error}</div>}
                     {chats?.sort((a, b) => {
                         const dateOne = new Date(a.lastUpdated).getTime();
                         const dateTwo = new Date(b.lastUpdated).getTime();

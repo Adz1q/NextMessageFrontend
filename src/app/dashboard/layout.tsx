@@ -14,7 +14,7 @@ export default async function DashboardLayout({ children }: Readonly<{
     return (
         <SidebarProvider defaultOpen={defaultOpen}>
             <AppSidebar session={session} />
-            <main className="w-full">
+            <main className="flex flex-col max-h-full w-full">
                 <div className="p-2">
                     <CollapsedSidebarTrigger />
                 </div>

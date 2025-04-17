@@ -35,6 +35,14 @@ type ChatMember = {
     isFriend: boolean;
 }
 
+type TMessage = {
+    id: number;
+    chatId: number;
+    senderId: number;
+    content: string;
+    date: string;
+};
+
 export const getUser = async (login: string, token: string): Promise<ApiResponse<User>> => {
     try {
         const response = await api.get<User>(`/user/get/${login}`, {
@@ -65,7 +73,7 @@ export const getChats = async (userId: string, token: string): Promise<ApiRespon
         return {
             success: true,
             data: response.data,
-        }
+        };
     }
     catch (error: unknown) {
         const responseError = error as AxiosError;
@@ -73,7 +81,7 @@ export const getChats = async (userId: string, token: string): Promise<ApiRespon
         return {
             success: false,
             error: responseError.message,
-        }
+        };
     }
 };
 
@@ -86,7 +94,7 @@ export const getPrivateChatMember = async (chatId: number, userId: number, token
         return {
             success: true,
             data: response.data,
-        }
+        };
     }
     catch (error: unknown) {
         const responseError = error as AxiosError;
@@ -94,6 +102,27 @@ export const getPrivateChatMember = async (chatId: number, userId: number, token
         return {
             success: false,
             error: responseError.message,
-        }
+        };
+    }
+};
+
+export const getMessages = async (chatId: number, userId: number, offset: number, limit: number, token: string): Promise<ApiResponse<TMessage[]>> => {
+    try {
+        const response = await api.get<TMessage[]>(`/chat/get/${chatId}/messages?userId=${userId}&offset=${offset}&limit=${limit}`, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+
+        return {
+            success: true,
+            data: response.data,
+        };
+    }
+    catch (error: unknown) {
+        const responseError = error as AxiosError;
+        
+        return {
+            success: false,
+            error: responseError.message,
+        };
     }
 };
