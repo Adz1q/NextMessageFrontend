@@ -1,69 +1,60 @@
 "use client";
 
-import {
-    Sidebar,
-    SidebarContent,
-    SidebarFooter,
-    SidebarGroup,
-    SidebarHeader,
-    SidebarTrigger,
-} from "@/components/ui/sidebar";
-import { Moon, Search, Settings, Sun } from "lucide-react";
+// import { useEffect, useState } from "react";
+import { Session } from "next-auth";
+// import { getChats } from "@/lib/api-requests";
+import { useTheme } from "next-themes";
+import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarHeader, SidebarTrigger } from "./sidebar";
 import Link from "next/link";
 import { Button } from "./button";
-import UserDropdownMenu from "../user-dropdown-menu/user-dropdown-menu";
-import { useEffect, useState } from "react";
-import { Session } from "next-auth";
-import { getChats } from "@/lib/api-requests";
+import { Moon, Search, Settings, Sun } from "lucide-react";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./dropdown-menu";
 import ChatCard from "../chat-card/chat-card";
-import { useTheme } from "next-themes";
-import { DropdownMenu } from "@radix-ui/react-dropdown-menu";
-import { DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./dropdown-menu";
+import UserDropdownMenu from "../user-dropdown-menu/user-dropdown-menu";
+import { useFetchChats } from "@/hooks/useFetchChats";
 
-type Chat = {
-    id: number;
-    name: string;
-    lastUpdated: string;
-    profilePictureUrl: string;
-    type: string;
-};
+// type Chat = {
+//     id: number;
+//     name: string;
+//     lastUpdated: string;
+//     profilePictureUrl: string;
+//     type: string;
+// };
 
 export function AppSidebar({ session }: { 
     session: Session | null
 }) {
-    const [chats, setChats] = useState<Chat[] | null>(null);
-    const [error, setError] = useState<string | null>(null);
-    
+    const { chats } = useFetchChats(session);
     const { setTheme } = useTheme();
+    // const [error, setError] = useState<string | null>(null);
 
-    useEffect(() => {
-        const fetchChats = async () => {
-            if (!session?.user?.id || !session?.user?.token) {
-                setError("Invalid session");
-                return;
-            }
-            try {
-                const response = await getChats(session?.user?.id, session?.user?.token);
+    // useEffect(() => {
+    //     const fetchChats = async () => {
+    //         if (!session?.user?.id || !session?.user?.token) {
+    //             setError("Invalid session");
+    //             return;
+    //         }
+    //         try {
+    //             const response = await getChats(session?.user?.id, session?.user?.token);
             
-                if (!response.success) {
-                    setError(response.error);
-                    return;
-                }
+    //             if (!response.success) {
+    //                 setError(response.error);
+    //                 return;
+    //             }
 
-                setChats(response.data);
-            }
-            catch (error: unknown) {
-                setError(error instanceof Error ? error.message : "Failed to fetched chats");
-            }
-        };
+    //             setChats(response.data);
+    //         }
+    //         catch (error: unknown) {
+    //             setError(error instanceof Error ? error.message : "Failed to fetched chats");
+    //         }
+    //     };
 
-        fetchChats();
-
-        return () => {
-            setChats(null);
-            setError(null);
-        }       
-    }, [session?.user?.id, session?.user?.token]);
+    //     fetchChats();
+        
+    //     return () => {
+    //         setError(null);
+    //     }       
+    // }, [session?.user?.id, session?.user?.token]);
 
     return (
       <Sidebar>
@@ -110,7 +101,7 @@ export function AppSidebar({ session }: {
         <SidebarContent>
           <SidebarGroup>
                 <div className={"flex flex-col items-center gap-2"}>
-                    {error && <div className="text-red-500 text-md">{error}</div>}
+                    {/*error && <div className="text-red-500 text-md">{error}</div>*/}
                     {chats?.sort((a, b) => {
                         const dateOne = new Date(a.lastUpdated).getTime();
                         const dateTwo = new Date(b.lastUpdated).getTime();

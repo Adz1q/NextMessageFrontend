@@ -67,7 +67,7 @@ export default function PrivateChatCard({ chatId, otherMember, userId, token }: 
                 </Button>
             </form>
         </div>
-    );
+    ); 
 }
 
 // add loading state to messages

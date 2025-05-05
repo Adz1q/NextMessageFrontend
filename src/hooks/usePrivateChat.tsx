@@ -42,7 +42,7 @@ export const usePrivateChat = (chatId: number, token: string, userId: number) =>
 
         client.activate();
         setStompClient(client);
-
+        
         return () => {
             client.deactivate();
         };
