@@ -1,8 +1,6 @@
 "use client";
 
-// import { useEffect, useState } from "react";
 import { Session } from "next-auth";
-// import { getChats } from "@/lib/api-requests";
 import { useTheme } from "next-themes";
 import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarHeader, SidebarTrigger } from "./sidebar";
 import Link from "next/link";
@@ -13,48 +11,11 @@ import ChatCard from "../chat-card/chat-card";
 import UserDropdownMenu from "../user-dropdown-menu/user-dropdown-menu";
 import { useFetchChats } from "@/hooks/useFetchChats";
 
-// type Chat = {
-//     id: number;
-//     name: string;
-//     lastUpdated: string;
-//     profilePictureUrl: string;
-//     type: string;
-// };
-
 export function AppSidebar({ session }: { 
     session: Session | null
 }) {
     const { chats } = useFetchChats(session);
     const { setTheme } = useTheme();
-    // const [error, setError] = useState<string | null>(null);
-
-    // useEffect(() => {
-    //     const fetchChats = async () => {
-    //         if (!session?.user?.id || !session?.user?.token) {
-    //             setError("Invalid session");
-    //             return;
-    //         }
-    //         try {
-    //             const response = await getChats(session?.user?.id, session?.user?.token);
-            
-    //             if (!response.success) {
-    //                 setError(response.error);
-    //                 return;
-    //             }
-
-    //             setChats(response.data);
-    //         }
-    //         catch (error: unknown) {
-    //             setError(error instanceof Error ? error.message : "Failed to fetched chats");
-    //         }
-    //     };
-
-    //     fetchChats();
-        
-    //     return () => {
-    //         setError(null);
-    //     }       
-    // }, [session?.user?.id, session?.user?.token]);
 
     return (
       <Sidebar>
@@ -101,7 +62,6 @@ export function AppSidebar({ session }: {
         <SidebarContent>
           <SidebarGroup>
                 <div className={"flex flex-col items-center gap-2"}>
-                    {/*error && <div className="text-red-500 text-md">{error}</div>*/}
                     {chats?.sort((a, b) => {
                         const dateOne = new Date(a.lastUpdated).getTime();
                         const dateTwo = new Date(b.lastUpdated).getTime();
@@ -115,5 +75,5 @@ export function AppSidebar({ session }: {
             <UserDropdownMenu session={session} />
         </SidebarFooter>
       </Sidebar>
-    )
+    );
 }
