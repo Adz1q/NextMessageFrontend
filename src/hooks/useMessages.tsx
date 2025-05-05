@@ -11,10 +11,12 @@ type TMessage = {
     date: string;
 };
 
+const MESSAGE_LIMIT: number = 50;
+
 export const useMessages = (setMessages: Dispatch<SetStateAction<TMessage[]>>, chatId: number, userId: number, token: string) => {
     useEffect(() => {
         const handleGetMessages = async () => {
-            const messagesResponse = await getMessages(chatId, userId, 0, 50, token);
+            const messagesResponse = await getMessages(chatId, userId, 0, MESSAGE_LIMIT, token);
 
             if (!messagesResponse.success) {
                 console.error(messagesResponse.error);
