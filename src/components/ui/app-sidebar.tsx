@@ -5,7 +5,7 @@ import { useTheme } from "next-themes";
 import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarHeader, SidebarTrigger } from "./sidebar";
 import Link from "next/link";
 import { Button } from "./button";
-import { Moon, Search, Settings, Sun } from "lucide-react";
+import { MessageCircle, Moon, Search, Settings, Sun, User } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./dropdown-menu";
 import ChatCard from "../chat-card/chat-card";
 import UserDropdownMenu from "../user-dropdown-menu/user-dropdown-menu";
@@ -61,6 +61,11 @@ export function AppSidebar({ session }: {
         </SidebarHeader>
         <SidebarContent>
           <SidebarGroup>
+            <div>
+                {/* <div>
+                    <Button><MessageCircle /></Button>
+                    <Button><User /></Button>
+                </div> */}
                 <div className={"flex flex-col items-center gap-2"}>
                     {chats?.sort((a, b) => {
                         const dateOne = new Date(a.lastUpdated).getTime();
@@ -69,6 +74,7 @@ export function AppSidebar({ session }: {
                         return dateTwo - dateOne;  
                     }).map((chat) => <ChatCard key={chat.id} chat={chat} />)}
                 </div>
+            </div> 
           </SidebarGroup>
         </SidebarContent>
         <SidebarFooter>

@@ -44,7 +44,9 @@ export const usePrivateChat = (chatId: number, token: string, userId: number) =>
         setStompClient(client);
         
         return () => {
+            setStompClient(null);
             client.deactivate();
+            setMessages([]);
         };
     }, [chatId, token]);
 

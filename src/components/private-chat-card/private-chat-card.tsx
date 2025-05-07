@@ -49,7 +49,7 @@ export default function PrivateChatCard({ chatId, otherMember, userId, token }: 
 
     return (
         <div className="flex flex-col h-full bg-background max-h-screen">
-            <div className="flex items-center w-full justify-start p-4 border-b">
+            <div className="flex items-center w-full justify-between p-4 border-b">
                 <div className="flex items-center justify-center gap-4 ">
                     <Avatar>
                         <AvatarImage src={otherMember.profilePictureUrl} className="w-25 h-25" alt="User"/>
@@ -57,6 +57,12 @@ export default function PrivateChatCard({ chatId, otherMember, userId, token }: 
                     <div className="font-medium">
                         {otherMember.username}
                     </div>
+                </div>
+                <div>
+                    <div>
+                        
+                    </div>
+                    <div></div>
                 </div>
             </div>
             <ScrollArea className="flex-grow max-h-full overflow-y-auto p-4 flex flex-col-reverse"> {/* flex flex-col-reverse makes items from the ScrollArea append from bottom */}

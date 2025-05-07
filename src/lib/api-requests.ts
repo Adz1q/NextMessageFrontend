@@ -43,6 +43,34 @@ type TMessage = {
     date: string;
 };
 
+type FoundUser = {
+    id: number;
+    username: string;
+    profilePictureUrl: string;
+    date: string;
+    allowMessagesFromNonFriends: boolean;
+};
+
+type Friend = {
+    id: number;
+    username: string;
+    profilePictureUrl: string;
+    friendshipId: number;
+    date: string;
+};
+
+type FriendshipRequest = {
+    id: number;
+    senderId: number;
+    receiverId: number;
+    date: string;
+};
+
+type PrivateChat = {
+    id: number;
+    lastUpdated: string;
+};
+
 export const getUser = async (login: string, token: string): Promise<ApiResponse<User>> => {
     try {
         const response = await api.get<User>(`/user/get/${login}`, {
@@ -120,6 +148,146 @@ export const getMessages = async (chatId: number, userId: number, offset: number
     catch (error: unknown) {
         const responseError = error as AxiosError;
         
+        return {
+            success: false,
+            error: responseError.message,
+        };
+    }
+};
+
+export const getUsersBySimilarUsername = async (username: string, token: string): Promise<ApiResponse<FoundUser[]>> => {
+    try {
+        const response = await api.get<FoundUser[]>(`/user/search/${username}`, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+
+        return {
+            success: true,
+            data: response.data,
+        };
+    }
+    catch (error: unknown) {
+        const responseError = error as AxiosError;
+
+        return {
+            success: false,
+            error: responseError.message,
+        };
+    }
+};
+
+export const getFriends = async (userId: number, token: string): Promise<ApiResponse<Friend[]>> => {
+    try {
+        const response = await api.get(`/friendship/getAll/${userId}`, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+
+        return {
+            success: true,
+            data: response.data,
+        };
+    }
+    catch (error: unknown) {
+        const responseError = error as AxiosError;
+
+        return {
+            success: false,
+            error: responseError.message,
+        };
+    }
+};
+
+export const getFriendshipRequestsBySenderId = async (senderId: number, token: string): Promise<ApiResponse<FriendshipRequest[]>> => {
+    try {
+        const response = await api.get<FriendshipRequest[]>(`/friendshipRequest/getAllBySenderId/${senderId}`, {
+            headers: { Authorization: `Bearer ${token}`},
+        });
+
+        return {
+            success: true,
+            data: response.data,
+        };
+    }
+    catch (error: unknown) {
+        const responseError = error as AxiosError;
+
+        return {
+            success: false,
+            error: responseError.message,
+        };
+    }
+};
+
+export const sendFriendshipRequest = async (senderId: number, receiverId: number, token: string): Promise<ApiResponse<null>> => {
+    try {
+        const DTO = {
+            senderId: senderId,
+            receiverId: receiverId,
+        };
+
+        const response = await api.post("/friendshipRequest/send", DTO, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (response.status !== 200) {
+            throw new Error(response.statusText);
+        }
+
+        return {
+            success: true,
+            data: null,
+        };
+    }
+    catch (error: unknown) {
+        const responseError = error as AxiosError;
+    
+        return {
+            success: false,
+            error: responseError.message,
+        };
+    }
+};
+
+export const getPrivateChatByMembers = async (firstUserId: number, secondUserId: number, token: string): Promise<ApiResponse<number>> => {
+    try {
+        const response = await api.get<number>(`/chat/get/${firstUserId}/${secondUserId}`, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+
+        return {
+            success: true,
+            data: response.data,
+        };
+    }
+    catch (error: unknown) {
+        const responseError = error as AxiosError;
+
+        return {
+            success: false,
+            error: responseError.message,
+        };
+    }
+};
+
+export const createPrivateChat = async (senderId: number, receiverId: number, token: string): Promise<ApiResponse<PrivateChat>> => {
+    try {
+        const DTO = {
+            senderId: senderId,
+            receiverId: receiverId,
+        };
+
+        const response = await api.post<PrivateChat>("/chat/create/private", DTO, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+
+        return {
+            success: true,
+            data: response.data,
+        };
+    }
+    catch (error: unknown) {
+        const responseError = error as AxiosError;
+
         return {
             success: false,
             error: responseError.message,
