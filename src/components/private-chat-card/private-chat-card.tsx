@@ -2,7 +2,7 @@
 
 import { MouseEvent } from "react";
 import { Button } from "../ui/button";
-import { Send, UserPlus } from "lucide-react";
+import { Send, UserPlus, X } from "lucide-react";
 import { Input } from "../ui/input";
 import MessageCard from "../message-card/message-card";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
@@ -34,7 +34,9 @@ export default function PrivateChatCard({ chatId, otherMember, userId, token }: 
         sendMessage,
         isFriendshipRequestSent,
         handleSendFriendshipRequest,
-        error
+        error,
+        isFriend,
+        handleRemoveFriend
     } = usePrivateChat(chatId, token, userId, otherMember);
 
     useMessages(setMessages, chatId, userId, token);
@@ -60,13 +62,16 @@ export default function PrivateChatCard({ chatId, otherMember, userId, token }: 
                     <div className="font-medium">
                         {otherMember.username}
                     </div>
-                    <Button onClick={handleSendFriendshipRequest} variant="ghost" className={otherMember.isFriend || isFriendshipRequestSent ? "invisible" : "visible"}>
+                    <Button onClick={handleSendFriendshipRequest} variant="ghost" className={isFriend || isFriendshipRequestSent ? "hidden" : "inline"}>
                         <UserPlus />
+                    </Button>
+                    <Button onClick={handleRemoveFriend} variant="ghost" className={isFriend ? "inline" : "hidden"}>
+                        <X />
                     </Button>
                     {error && <div className="text-red-900">{error}</div>}
                 </div>
                 <div>
-                    Videocall button
+                    Video call button
                 </div>
             </div>
             <ScrollArea className="flex-grow max-h-full overflow-y-auto p-4 flex flex-col-reverse"> {/* flex flex-col-reverse makes items from the ScrollArea append from bottom */}
@@ -95,7 +100,3 @@ export default function PrivateChatCard({ chatId, otherMember, userId, token }: 
         </div>
     ); 
 }
-
-// add loading state to messages
-// add fetching messages on scroll up (increasing offset to get older messages)
-// repair layout, so it doesn't overflow the screen when there are too many messages

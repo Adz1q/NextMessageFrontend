@@ -19,8 +19,8 @@ export default async function PrivateChatPage({ params }: {
 
     if (!otherMember.success) {
         throw new Error(otherMember.error);
-    }
-
+    }    
+    
     return (
         <PrivateChatCard chatId={parseInt(id)} otherMember={otherMember.data} token={session?.user?.token} userId={parseInt(session?.user?.id)} />
     );

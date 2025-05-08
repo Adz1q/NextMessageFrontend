@@ -15,7 +15,7 @@ import { signIn } from "next-auth/react";
 const formSchema = z.object({
     login: z.string()
     .min(1, { message: "Email or username cannot be empty" })
-    .max(20, { message: "Email or username cannot be longer than 50 characters"}),
+    .max(50, { message: "Email or username cannot be longer than 50 characters"}),
     password: z.string()
     .min(1, { message: "Password cannot be empty" })
     .max(32, { message: "Password cannot be longer than 32 characters"}),

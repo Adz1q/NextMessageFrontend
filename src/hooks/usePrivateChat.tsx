@@ -3,7 +3,8 @@
 import React, { useEffect, useState } from "react";
 import { Client, Frame, Message } from "@stomp/stompjs";
 import SockJS from "sockjs-client";
-import { getFriendshipRequestsBySenderId, sendFriendshipRequest } from "@/lib/api-requests";
+import { getFriendshipRequestsBySenderId, removeFriend, sendFriendshipRequest } from "@/lib/api-requests";
+import { useFetchFriends } from "./useFetchFriends";
 
 type TMessage = {
     id: number;
@@ -26,7 +27,10 @@ export const usePrivateChat = (chatId: number, token: string, userId: number, ot
     const [newMessage, setNewMessage] = useState("");
     const [stompClient, setStompClient] = useState<Client | null>(null);
     const [isFriendshipRequestSent, setIsFriendshipRequestSent] = useState(false);
+    const [isFriend, setIsFriend] = useState(false);
+    const [friendshipId, setFriendshipId] = useState<number>(0);
     const [error, setError] = useState("");
+    const { friends } = useFetchFriends(userId, token);
 
     useEffect(() => {
         const client = new Client({
@@ -80,6 +84,15 @@ export const usePrivateChat = (chatId: number, token: string, userId: number, ot
         };
     }, [chatId, token, isFriendshipRequestSent, otherMember, userId]);
 
+    useEffect(() => {
+        friends.forEach((friend) => {
+            if (otherMember.id === friend.id) {
+                setIsFriend(true);
+                setFriendshipId(friend.friendshipId);
+            }
+        });      
+    }, [friends, otherMember]);
+
     const handleSendFriendshipRequest = async () => {
         const result = await sendFriendshipRequest(
             userId,
@@ -93,6 +106,16 @@ export const usePrivateChat = (chatId: number, token: string, userId: number, ot
 
         setError("");
         setIsFriendshipRequestSent(true);
+    };
+
+    const handleRemoveFriend = async () => {
+        const result = await removeFriend(friendshipId, token);
+
+        if (!result.success) {
+            setError(result.error);
+        }
+
+        setIsFriend(false);
     };
 
     const sendMessage = (event: React.MouseEvent) => {
@@ -124,5 +147,7 @@ export const usePrivateChat = (chatId: number, token: string, userId: number, ot
         isFriendshipRequestSent,
         handleSendFriendshipRequest,
         error,
+        isFriend,
+        handleRemoveFriend,
     };
 };

@@ -7,19 +7,24 @@ import Link from "next/link";
 import { Button } from "./button";
 import { MessageCircle, Moon, Search, Settings, Sun, User } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./dropdown-menu";
-import ChatCard from "../chat-card/chat-card";
 import UserDropdownMenu from "../user-dropdown-menu/user-dropdown-menu";
-import { useFetchChats } from "@/hooks/useFetchChats";
+import { useChangeSidebarList } from "@/hooks/useChangeSidebarList";
+import ChatList from "../chat-list/chat-list";
+import FriendList from "../friend-list/friend-list";
 
 export function AppSidebar({ session }: { 
     session: Session | null
 }) {
-    const { chats } = useFetchChats(session);
     const { setTheme } = useTheme();
+    const { isDisplayFriends, handleChangeToChats, handleChangeToFriends } = useChangeSidebarList();
+
+    if (!session?.user) {
+        throw new Error("Invalid session!");
+    } 
 
     return (
       <Sidebar>
-        <SidebarHeader className="pb-4">
+        <SidebarHeader className="pb-2">
             <div className="flex items-center justify-between gap-2 w-full">
                 <SidebarTrigger/>
                 <div className="text-muted-foreground text-md ml-auto mr-auto font-bold">NextMessage</div>
@@ -58,22 +63,16 @@ export function AppSidebar({ session }: {
                         </DropdownMenuContent>
                     </DropdownMenu>
             </div>
+            <div className="flex items-center justify-center">
+                <Button onClick={handleChangeToChats} variant={"ghost"}><MessageCircle /></Button>
+                <Button onClick={handleChangeToFriends} variant={"ghost"}><User /></Button>
+            </div>
         </SidebarHeader>
         <SidebarContent>
           <SidebarGroup>
+            
             <div>
-                {/* <div>
-                    <Button><MessageCircle /></Button>
-                    <Button><User /></Button>
-                </div> */}
-                <div className={"flex flex-col items-center gap-2"}>
-                    {chats?.sort((a, b) => {
-                        const dateOne = new Date(a.lastUpdated).getTime();
-                        const dateTwo = new Date(b.lastUpdated).getTime();
-                        
-                        return dateTwo - dateOne;  
-                    }).map((chat) => <ChatCard key={chat.id} chat={chat} />)}
-                </div>
+                {isDisplayFriends ? <FriendList userId={parseInt(session?.user?.id)} token={session?.user?.token} /> : <ChatList session={session} />}
             </div> 
           </SidebarGroup>
         </SidebarContent>

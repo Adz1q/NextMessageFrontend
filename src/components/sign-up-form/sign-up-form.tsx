@@ -15,8 +15,8 @@ import { signIn } from "next-auth/react";
 
 const formSchema = z.object({
     username: z.string()
-        .min(4, { message: "Username must be between 4 and 20 characters" })
-        .max(20, { message: "Username must be between 4 and 20 characters" }),
+        .min(4, { message: "Username must be between 4 and 12 characters" })
+        .max(12, { message: "Username must be between 4 and 12 characters" }),
     email: z.string()
         .min(4, { message: "Email must be between 4 and 50 characters" })
         .max(50, { message: "Email must be between 4 and 50 characters" }),

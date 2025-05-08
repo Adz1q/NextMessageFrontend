@@ -294,3 +294,28 @@ export const createPrivateChat = async (senderId: number, receiverId: number, to
         };
     }
 };
+
+export const removeFriend = async (friendshipId: number, token: string): Promise<ApiResponse<null>> => {
+    try {
+        const response = await api.delete(`/friendship/remove/${friendshipId}`, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (response.status !== 200) {
+            throw new Error(response.statusText);
+        }
+
+        return {
+            success: true,
+            data: null,
+        };
+    }
+    catch (error: unknown) {
+        const responseError = error as AxiosError;
+        
+        return {
+            success: false,
+            error: responseError.message,
+        };
+    }
+};
