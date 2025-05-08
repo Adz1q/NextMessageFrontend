@@ -2,7 +2,7 @@
 
 import { MouseEvent } from "react";
 import { Button } from "../ui/button";
-import { Send } from "lucide-react";
+import { Send, UserPlus } from "lucide-react";
 import { Input } from "../ui/input";
 import MessageCard from "../message-card/message-card";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
@@ -31,8 +31,11 @@ export default function PrivateChatCard({ chatId, otherMember, userId, token }: 
         setMessages,
         newMessage, 
         setNewMessage, 
-        sendMessage 
-    } = usePrivateChat(chatId, token, userId);
+        sendMessage,
+        isFriendshipRequestSent,
+        handleSendFriendshipRequest,
+        error
+    } = usePrivateChat(chatId, token, userId, otherMember);
 
     useMessages(setMessages, chatId, userId, token);
 
@@ -57,12 +60,13 @@ export default function PrivateChatCard({ chatId, otherMember, userId, token }: 
                     <div className="font-medium">
                         {otherMember.username}
                     </div>
+                    <Button onClick={handleSendFriendshipRequest} variant="ghost" className={otherMember.isFriend || isFriendshipRequestSent ? "invisible" : "visible"}>
+                        <UserPlus />
+                    </Button>
+                    {error && <div className="text-red-900">{error}</div>}
                 </div>
                 <div>
-                    <div>
-                        
-                    </div>
-                    <div></div>
+                    Videocall button
                 </div>
             </div>
             <ScrollArea className="flex-grow max-h-full overflow-y-auto p-4 flex flex-col-reverse"> {/* flex flex-col-reverse makes items from the ScrollArea append from bottom */}
