@@ -5,18 +5,26 @@ import { useTheme } from "next-themes";
 import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarHeader, SidebarTrigger } from "./sidebar";
 import Link from "next/link";
 import { Button } from "./button";
-import { MessageCircle, Moon, Search, Settings, Sun, User } from "lucide-react";
+import { MessageCircle, Moon, Search, Settings, Sun, User, UserPlus } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./dropdown-menu";
 import UserDropdownMenu from "../user-dropdown-menu/user-dropdown-menu";
 import { useChangeSidebarList } from "@/hooks/useChangeSidebarList";
 import ChatList from "../chat-list/chat-list";
 import FriendList from "../friend-list/friend-list";
+import FriendshipRequestList from "../friendship-request-list/friendship-request-list";
 
 export function AppSidebar({ session }: { 
     session: Session | null
 }) {
     const { setTheme } = useTheme();
-    const { isDisplayFriends, handleChangeToChats, handleChangeToFriends } = useChangeSidebarList();
+    const { 
+        isDisplayFriends, 
+        isDisplayChats,
+        isDisplayFriendshipRequests,
+        handleChangeToChats, 
+        handleChangeToFriends, 
+        handleChangeToFriendshipRequests 
+    } = useChangeSidebarList();
 
     if (!session?.user) {
         throw new Error("Invalid session!");
@@ -63,16 +71,18 @@ export function AppSidebar({ session }: {
                         </DropdownMenuContent>
                     </DropdownMenu>
             </div>
-            <div className="flex items-center justify-center">
-                <Button onClick={handleChangeToChats} variant={"ghost"}><MessageCircle /></Button>
-                <Button onClick={handleChangeToFriends} variant={"ghost"}><User /></Button>
+            <div className="flex items-center justify-center mt-1">
+                <Button className={isDisplayChats ? "bg-muted" : ""} onClick={handleChangeToChats} variant={"ghost"}><MessageCircle /></Button>
+                <Button className={isDisplayFriends ? "bg-muted" : ""} onClick={handleChangeToFriends} variant={"ghost"}><User /></Button>
+                <Button className={isDisplayFriendshipRequests ? "bg-muted" : ""} onClick={handleChangeToFriendshipRequests} variant={"ghost"}><UserPlus /></Button>
             </div>
         </SidebarHeader>
         <SidebarContent>
           <SidebarGroup>
-            
             <div>
-                {isDisplayFriends ? <FriendList userId={parseInt(session?.user?.id)} token={session?.user?.token} /> : <ChatList session={session} />}
+                {isDisplayChats && <ChatList session={session} />}
+                {isDisplayFriends && <FriendList userId={parseInt(session?.user?.id)} token={session?.user?.token} />}
+                {isDisplayFriendshipRequests && <FriendshipRequestList userId={parseInt(session?.user?.id)} token={session?.user?.token}/>}
             </div> 
           </SidebarGroup>
         </SidebarContent>

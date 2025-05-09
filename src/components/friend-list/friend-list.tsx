@@ -5,7 +5,7 @@ export default function FriendList({ userId, token }: { userId: number, token: s
     const { friends } = useFetchFriends(userId, token);
 
     return (
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-2">
             {friends.sort((a, b) => a.username.localeCompare(b.username)).map((friend, index) => <FriendCard key={index} friend={friend} userId={userId} token={token} />)}
         </div>
     );

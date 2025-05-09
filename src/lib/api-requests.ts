@@ -319,3 +319,58 @@ export const removeFriend = async (friendshipId: number, token: string): Promise
         };
     }
 };
+
+export const acceptFriendshipRequest = async (senderId: number, receiverId: number, token: string): Promise<ApiResponse<null>> => {
+    try {
+        const DTO = {
+            senderId: senderId,
+            receiverId: receiverId,
+        };
+
+        const response = await api.post("/friendshipRequest/accept", DTO, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (response.status !== 200) {
+            throw new Error(response.statusText);
+        }
+
+        return {
+            success: true,
+            data: null,
+        };
+    }
+    catch (error: unknown) {
+        const responseError = error as AxiosError;
+
+        return {
+            success: false,
+            error: responseError.message,
+        };
+    }
+};
+
+export const rejectFriendshipRequest = async (senderId: number, receiverId: number, token: string): Promise<ApiResponse<null>> => {
+    try {
+        const response = await api.delete(`/friendshipRequest/reject/${senderId}/${receiverId}`, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (response.status !== 200) {
+            throw new Error(response.statusText);
+        }
+
+        return {
+            success: true,
+            data: null,
+        };
+    }
+    catch (error: unknown) {
+        const responseError = error as AxiosError;
+
+        return {
+            success: false,
+            error: responseError.message,
+        };
+    }
+};
