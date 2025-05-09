@@ -5,7 +5,7 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from "../ui/form"
 import { Input } from "../ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { Search } from "lucide-react";
+import { Search, Users } from "lucide-react";
 import { Button } from "../ui/button";
 import { getChats, getFriends, getFriendshipRequestsBySenderId, getUsersBySimilarUsername } from "@/lib/api-requests";
 import { useEffect, useState } from "react";
@@ -49,7 +49,7 @@ const formSchema = z.object({
 
 export default function SearchCard({ session }: { session: Session }) {
     const [error, setError] = useState("");
-    const [foundUsers, setFoundUsers] = useState<FoundUser[]>([]);
+    const [foundUsers, setFoundUsers] = useState<FoundUser[] | null>(null);
     const [friends, setFriends] = useState<Friend[]>([]);
     const [chats, setChats] = useState<Chat[]>([]);
     const [friendshipRequests, setFriendshipRequests] = useState<FriendshipRequest[]>([]);
@@ -94,11 +94,16 @@ export default function SearchCard({ session }: { session: Session }) {
 
     return (
         <div className="flex flex-col">
-            <div className="flex justify-center items-center text-2xl gap-2 font-500 text-muted-foreground">
-                <div>Search for a user</div>
-                <Search/>
+            <div className="flex flex-col items-center text-center mb-8">
+                <div className="flex items-center justify-center text-3xl sm:text-4xl gap-3 font-semibold text-foreground mb-2">
+                    <Users className="h-8 w-8 text-primary" />
+                    <div>Find New Friends</div>
+                </div>
+                <div className="text-muted-foreground text-sm sm:text-base">
+                    Search for users by their username to add them and message.
+                </div>
             </div>
-            <div className="items-center flex flex-col border-b p-6">
+            <div className="items-center flex flex-col border-b pb-6">
                 <Form {...form}>
                     <form 
                         onSubmit={form.handleSubmit(onSubmit)}
@@ -120,15 +125,17 @@ export default function SearchCard({ session }: { session: Session }) {
                                 </FormItem>
                             }}
                         />
-                        <Button>
+                        <Button> 
                             <Search/>
+                            Search
                         </Button>
                     </form>
                 </Form>          
             </div>
             <div className="flex flex-col gap-6 p-6">
                 {error && <div className="text-2xl w-full text-center">{error}</div>}
-                {foundUsers.map((foundUser) => <FoundUserCard key={foundUser.id} foundUser={foundUser} chats={chats} friends={friends} friendshipRequests={friendshipRequests} session={session}/>)}
+                {foundUsers && <div className="flex items-center justify-center gap-3 text-3xl w-full font-500">Search Result <Search /></div>}
+                {foundUsers?.map((foundUser) => <FoundUserCard key={foundUser.id} foundUser={foundUser} chats={chats} friends={friends} friendshipRequests={friendshipRequests} session={session}/>)}
             </div>
         </div>
     );

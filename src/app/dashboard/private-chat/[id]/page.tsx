@@ -1,7 +1,12 @@
 import PrivateChatCard from "@/components/private-chat-card/private-chat-card";
 import { getPrivateChatMember } from "@/lib/api-requests";
 import { auth } from "@/lib/auth";
+import { Metadata } from "next";
 import { Session } from "next-auth";
+
+export const metadata: Metadata = {
+    title: "Private Chat | NextMessage",
+};
 
 export default async function PrivateChatPage({ params }: {
     params: {

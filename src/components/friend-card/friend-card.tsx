@@ -1,4 +1,4 @@
-import { MessageCircle } from "lucide-react";
+import { MessageCircleMore } from "lucide-react";
 import { Avatar, AvatarImage } from "../ui/avatar";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
@@ -56,7 +56,7 @@ export default function FriendCard({ friend, userId, token }: {
                     {friend.username} 
                 </div>
                 <Button onClick={handleStartNewConversation} variant="ghost" size="icon">
-                    <MessageCircle />
+                    <MessageCircleMore />
                 </Button> 
             </div>
         </div>

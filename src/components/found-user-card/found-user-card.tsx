@@ -60,10 +60,10 @@ export default function FoundUserCard({ foundUser, friends, chats, friendshipReq
             </div>
             <div className="flex items-center gap-2">
                 <Button onClick={handleStartNewConversation} variant="outline" className={foundUser.allowMessagesFromNonFriends || isFriend ? "visible" : "invisible"}>
-                    <MessageCircleMore />
+                    <MessageCircleMore /> Message
                 </Button>
                 <Button onClick={handleSendFriendshipRequest} variant="outline" className={isFriend || isFriendshipRequestSent ? "invisible" : "visible"}>
-                    <UserPlus />
+                    <UserPlus /> Add Friend
                 </Button>
                 {error && <div className="text-red-900">{error}</div>}
             </div>
