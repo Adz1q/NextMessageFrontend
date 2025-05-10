@@ -23,7 +23,7 @@ export default function UserDropdownMenu({ session }: {
                     </DropdownMenuTrigger>
                     <DropdownMenuContent side="top" className="bg-background w-[--radix-popper-anchor-width] p-0 border-none">
                         <DropdownMenuItem>
-                            <div onClick={signOut} className="flex gap-2 items-center p-2 text-foreground">
+                            <div onClick={() => signOut()} className="flex gap-2 items-center p-2 text-foreground">
                                 <LogOutIcon size={20}/>
                                  Sign Out
                             </div>

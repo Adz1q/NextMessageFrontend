@@ -374,3 +374,119 @@ export const rejectFriendshipRequest = async (senderId: number, receiverId: numb
         };
     }
 };
+
+export const changeUsername = async (userId: number, newUsername: string, token: string): Promise<ApiResponse<null>> => {
+    try {
+        const DTO = {
+            userId: userId,
+            newUsername: newUsername,
+        };
+
+        const response = await api.post("/user/change/username", DTO, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (response.status !== 200) {
+            throw new Error(response.statusText);
+        }
+
+        return {
+            success: true,
+            data: null,
+        };
+    }
+    catch (error: unknown) {
+        const responseError = error as AxiosError;
+
+        return {
+            success: false,
+            error: responseError.message,
+        };
+    }
+};
+
+export const changePassword = async (userId: number, oldPassword: string, newPassword: string, token: string): Promise<ApiResponse<null>> => {
+    try {
+        const DTO = {
+            userId: userId,
+            oldPassword: oldPassword,
+            newPassword: newPassword,
+        };
+
+        const response = await api.post("user/change/password", DTO, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (response.status !== 200) {
+            throw new Error(response.statusText);
+        }
+
+        return {
+            success: true,
+            data: null,
+        };
+    }
+    catch (error: unknown) {
+        const responseError = error as AxiosError;
+
+        return {
+            success: false,
+            error: responseError.message,
+        };
+    }
+};
+
+export const changeMessagePreferences = async (userId: number, allowMessagesFromNonFriends: boolean, token: string): Promise<ApiResponse<null>> => {
+    try {
+        const DTO = {
+            userId: userId,
+            allowMessagesFromNonFriends: allowMessagesFromNonFriends,
+        };
+
+        const response = await api.post("/user/change/messagePreferences", DTO, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (response.status !== 200) {
+            throw new Error(response.statusText);
+        }
+
+        return {
+            success: true,
+            data: null,
+        };
+    }
+    catch (error: unknown) {
+        const responseError = error as AxiosError;
+
+        return {
+            success: false,
+            error: responseError.message,
+        };
+    }
+};
+
+export const deleteAccount = async (userId: number, password: string, token: string): Promise<ApiResponse<null>> => {
+    try {
+        const response = await api.delete(`/user/delete/${userId}/${password}`, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (response.status !== 200) {
+            throw new Error(response.statusText);
+        }
+
+        return {
+            success: true,
+            data: null,
+        };
+    }
+    catch (error: unknown) {
+        const responseError = error as AxiosError;
+
+        return {
+            success: false,
+            error: responseError.message,
+        };
+    }
+};
