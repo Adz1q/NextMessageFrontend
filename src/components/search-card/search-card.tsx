@@ -93,7 +93,7 @@ export default function SearchCard({ session }: { session: Session }) {
     };
 
     return (
-        <div className="flex flex-col">
+        <div className="flex flex-col mt-2">
             <div className="flex flex-col items-center text-center mb-8">
                 <div className="flex items-center justify-center text-3xl sm:text-4xl gap-3 font-semibold text-foreground mb-2">
                     <Users className="h-8 w-8 text-primary" />
