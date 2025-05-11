@@ -10,7 +10,7 @@ type Friend = {
     profilePictureUrl: string;
     friendshipId: number;
     date: string;
-};
+}; 
 
 export default function FriendCard({ friend, userId, token }: { 
     friend: Friend, 

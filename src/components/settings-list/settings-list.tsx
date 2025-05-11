@@ -1,4 +1,4 @@
-"use client";
+"use client"; 
 
 import { KeyRound, Settings, ShieldCheck, Trash2, UserCircle } from "lucide-react";
 import { useState } from "react";

@@ -1,4 +1,4 @@
-"use client";
+"use client"; 
 
 import { useFormatShortDate } from "@/hooks/useFormatShortDate";
 import Image from "next/image";

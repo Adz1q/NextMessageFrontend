@@ -14,5 +14,5 @@ export default function ChatList({ session }: { session: Session | null }) {
                 return dateTwo - dateOne;  
             }).map((chat) => <ChatCard key={chat.id} chat={chat} />)}
         </div>
-    );
+    ); 
 }

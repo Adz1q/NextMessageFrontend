@@ -1,4 +1,4 @@
-"use client";
+"use client"; 
 
 import { useFetchFriendshipRequests } from "@/hooks/useFetchFriendshipRequests";
 import FriendshipRequestCard from "../friendship-request-card/friendship-request-card";

@@ -1,4 +1,4 @@
-"use client";
+"use client"; 
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -28,7 +28,7 @@ const formSchema = z.object({
 
 export default function CreateTeamChatForm({ userId, token }: {
     userId: number,
-    token: string
+    token: string,
 }) {
     const [selectedFriendIds, setSelectedFriendIds] = useState<Set<number>>(new Set());
     const [isSubmitting, setIsSubmitting] = useState(false);
