@@ -151,6 +151,7 @@ export default function SearchCard({ session }: { session: Session }) {
                 </Form>          
             </div>
             <div className="flex flex-col gap-6 p-6">
+                {error && <div className="text-2xl w-full text-center">{error}</div>}
                 {!foundUsers && (
                     <div className="m-12 grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6 flex-grow content-start md:content-center p-2 md:p-0">
                         <EmptyStateBlock
@@ -175,7 +176,6 @@ export default function SearchCard({ session }: { session: Session }) {
                         />
                     </div>
                 )}
-                {error && <div className="text-2xl w-full text-center">{error}</div>}
                 {foundUsers && <div className="flex items-center justify-center gap-3 text-3xl w-full font-500">Search Result <Search /></div>}
                 {foundUsers?.map((foundUser) => <FoundUserCard key={foundUser.id} foundUser={foundUser} chats={chats} friends={friends} friendshipRequests={friendshipRequests} session={session}/>)}
             </div>
