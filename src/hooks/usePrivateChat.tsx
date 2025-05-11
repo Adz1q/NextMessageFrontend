@@ -82,7 +82,7 @@ export const usePrivateChat = (chatId: number, token: string, userId: number, ot
             client.deactivate();
             setMessages([]);
         };
-    }, [chatId, token, isFriendshipRequestSent, otherMember, userId]);
+    }, []); // chatId, token, isFriendshipRequestSent, otherMember, userId - could be as deps but when you click the same chat, the messages disappear
 
     useEffect(() => {
         friends.forEach((friend) => {

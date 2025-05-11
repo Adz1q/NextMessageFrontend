@@ -490,3 +490,34 @@ export const deleteAccount = async (userId: number, password: string, token: str
         };
     }
 };
+
+export const createTeamChat = async (name: string, adminId: number, memberIds: number[], token: string): Promise<ApiResponse<null>> => {
+    try {
+        const DTO = {
+            name: name,
+            adminId: adminId,
+            memberIds: memberIds
+        };
+
+        const response = await api.post("/chat/create/team", DTO, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (response.status !== 200) {
+            throw new Error(response.statusText);
+        }
+
+        return {
+            success: true,
+            data: null,
+        };
+    }
+    catch (error: unknown) {
+        const responseError = error as AxiosError;
+
+        return {
+            success: false,
+            error: responseError.message
+        };
+    }
+};

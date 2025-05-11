@@ -5,7 +5,7 @@ import { useTheme } from "next-themes";
 import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarHeader, SidebarTrigger } from "./sidebar";
 import Link from "next/link";
 import { Button } from "./button";
-import { MessageCircle, Moon, Search, Settings, Sun, User, UserPlus } from "lucide-react";
+import { MessageCircle, MessageCirclePlus, Moon, Search, Settings, Sun, User, UserPlus } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./dropdown-menu";
 import UserDropdownMenu from "../user-dropdown-menu/user-dropdown-menu";
 import { useChangeSidebarList } from "@/hooks/useChangeSidebarList";
@@ -50,12 +50,18 @@ export function AppSidebar({ session }: {
                         Settings
                     </Button>
                 </Link>
+                <Link href="/dashboard/team-chat/create" className="w-full">
+                    <Button variant="ghost" className="flex justify-start text-md w-full">
+                        <MessageCirclePlus />
+                        Create Team Chat
+                    </Button>
+                </Link>
                 <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Button variant="ghost" className="flex justify-start text-md w-full">
-                            <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" /> Theme
-                            <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-                            <span className="sr-only">Toggle theme</span>
+                                <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" /> Theme
+                                <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+                                <span className="sr-only">Toggle theme</span>
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
@@ -69,9 +75,9 @@ export function AppSidebar({ session }: {
                             System
                             </DropdownMenuItem>
                         </DropdownMenuContent>
-                    </DropdownMenu>
+                </DropdownMenu>
             </div>
-            <div className="flex items-center justify-center mt-1">
+            <div className="flex items-center justify-center mt-1 gap-2">
                 <Button className={isDisplayChats ? "bg-muted" : ""} onClick={handleChangeToChats} variant={"ghost"}><MessageCircle /></Button>
                 <Button className={isDisplayFriends ? "bg-muted" : ""} onClick={handleChangeToFriends} variant={"ghost"}><User /></Button>
                 <Button className={isDisplayFriendshipRequests ? "bg-muted" : ""} onClick={handleChangeToFriendshipRequests} variant={"ghost"}><UserPlus /></Button>
