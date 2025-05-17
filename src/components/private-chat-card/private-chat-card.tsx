@@ -5,10 +5,10 @@ import { Button } from "../ui/button";
 import { Send, UserPlus, X } from "lucide-react";
 import { Input } from "../ui/input";
 import MessageCard from "../message-card/message-card";
-import { ScrollArea } from "@radix-ui/react-scroll-area";
 import { Avatar, AvatarImage } from "../ui/avatar";
 import { usePrivateChat } from "@/hooks/usePrivateChat";
 import { useMessages } from "@/hooks/useMessages";
+import { ScrollArea } from "@radix-ui/react-scroll-area";
 
 type ChatMember = {
     id: number;
