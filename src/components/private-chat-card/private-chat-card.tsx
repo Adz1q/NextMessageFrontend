@@ -2,13 +2,14 @@
 
 import { MouseEvent } from "react";
 import { Button } from "../ui/button";
-import { Send, UserPlus, X } from "lucide-react";
+import { Loader2, MessageCircle, PhoneCall, Send, UserPlus, Video, X } from "lucide-react";
 import { Input } from "../ui/input";
 import MessageCard from "../message-card/message-card";
 import { Avatar, AvatarImage } from "../ui/avatar";
 import { usePrivateChat } from "@/hooks/usePrivateChat";
 import { useMessages } from "@/hooks/useMessages";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
+import InfiniteScroll from 'react-infinite-scroll-component';
 
 type ChatMember = {
     id: number;
@@ -39,7 +40,11 @@ export default function PrivateChatCard({ chatId, otherMember, userId, token }: 
         handleRemoveFriend
     } = usePrivateChat(chatId, token, userId, otherMember);
 
-    useMessages(setMessages, chatId, userId, token);
+    const { 
+        isLoading,
+        hasMore,
+        getMoreMessges,
+    } = useMessages(setMessages, chatId, userId, token);
 
     // This refers to the useRef approach
     // const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -71,11 +76,30 @@ export default function PrivateChatCard({ chatId, otherMember, userId, token }: 
                     {error && <div className="text-red-900">{error}</div>}
                 </div>
                 <div>
-                    Video call button
+                    <Button variant="ghost"><PhoneCall /></Button>
+                    <Button variant="ghost"><Video /></Button>
                 </div>
             </div>
-            <ScrollArea className="flex-grow max-h-full overflow-y-auto p-4 flex flex-col-reverse"> {/* flex flex-col-reverse makes items from the ScrollArea append from bottom */}
-                <div className="w-full">
+            <ScrollArea className="flex-grow max-h-full overflow-y-auto over p-4 flex flex-col-reverse"> {/* flex flex-col-reverse makes items from the ScrollArea append from bottom */}
+                <InfiniteScroll
+                    className="flex flex-col-reverse"
+                    dataLength={messages.length}
+                    inverse={true}
+                    next={getMoreMessges}
+                    hasMore={hasMore}
+                    loader={
+                        <div className="flex flex-col items-center justify-center flex-grow text-muted-foreground min-h-[200px]">
+                            <Loader2 className="h-10 w-10 animate-spin text-primary mb-4" />
+                            <p>Loading messages...</p>
+                        </div>
+                    }
+                    endMessage={
+                            <div className="text-center text-muted-foreground text-xs py-2">
+                                No older messages.
+                            </div>
+                    }
+                >
+                    <div className="w-full">
                     {messages.sort((a, b) => a.id - b.id).map((message, index) => (
                         <MessageCard key={index} message={message} userId={userId}/>
                     ))}
@@ -84,7 +108,21 @@ export default function PrivateChatCard({ chatId, otherMember, userId, token }: 
                     so when you receive a new message there can be a smooth animation
                     but new message = scroll to the bottom and you cannot fetch messages 
                     because fetching old messages will trigger the scroll to the bottom */} 
-                </div>
+                    {isLoading && (
+                        <div className="flex flex-col items-center justify-center flex-grow text-muted-foreground  min-h-[200px]">
+                            <Loader2 className="h-10 w-10 animate-spin text-primary mb-4" />
+                            <p>Loading messages...</p>
+                        </div>
+                    )}
+                    {!isLoading && messages.length === 0 && (
+                        <div className="flex flex-col items-center justify-center flex-grow text-muted-foreground  min-h-[200px]">
+                            <MessageCircle className="h-12 w-12 text-border mb-4" />
+                            <p className="font-medium">No messages yet.</p>
+                            <p className="text-xs">Be the first to send a message!</p>
+                        </div>
+                    )}
+                    </div>
+                </InfiniteScroll>
             </ScrollArea> 
             <form className="flex gap-4 w-full p-4 border-t">
                 <Input
