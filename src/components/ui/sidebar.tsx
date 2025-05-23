@@ -48,7 +48,9 @@ const CollapsedSidebarTrigger = () => {
   const { open } = useSidebar();
 
   return (
-    <SidebarTrigger className={`${open ? "hidden" : "flex"} transition-all duration-300 ease-in-out`}/>
+      <div className={`${open ? "hidden" : "flex"} px-4 pt-4`}>
+          <SidebarTrigger className={`transition-all duration-300 ease-in-out`}/>
+      </div> 
   );
 }
 

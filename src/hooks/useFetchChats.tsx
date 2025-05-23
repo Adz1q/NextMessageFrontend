@@ -16,6 +16,7 @@ type Chat = {
 export const useFetchChats = (session: Session | null) => {
     const [chats, setChats] = useState<Chat[] | null>(null);
     const [stompClient, setStompClient] = useState<Client | null>(null);
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         if (!session?.user?.id || !session?.user?.token) {
@@ -31,12 +32,12 @@ export const useFetchChats = (session: Session | null) => {
             connectHeaders: {
                 Authorization: `Bearer ${token}`,
             },
-            onConnect: (frame: Frame) => {
-                console.log(`Connected: ${frame}`);
-
+            onConnect: () => {
                 client.subscribe(`/topic/user/${userId}/chats`, (message: Message) => {
+                    setIsLoading(true);
                     const receivedChats: Chat[] = JSON.parse(message.body);
                     setChats(receivedChats);
+                    setIsLoading(false);
                 });
 
                 const getChatsByUserIdDTO = {
@@ -63,9 +64,9 @@ export const useFetchChats = (session: Session | null) => {
         setStompClient(client);
 
         if (stompClient?.connected) {
-            
+            setStompClient(client);
         }
-
+        
         return () => {
             setChats(null);
             client.deactivate();
@@ -75,5 +76,7 @@ export const useFetchChats = (session: Session | null) => {
     return {
         chats,
         setChats,
+        isLoading,
+        setIsLoading,
     };
 };

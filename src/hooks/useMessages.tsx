@@ -19,9 +19,7 @@ export const useMessages = (setMessages: Dispatch<SetStateAction<TMessage[]>>, c
     const [hasMore, setHasMore] = useState(true);
     const [offset, setOffset] = useState(0);
 
-    const getMoreMessges = async () => {
-        setIsLoading(true);
-
+    const getMoreMessages = async () => {
         const messagesResponse = await getMessages(chatId, userId, offset, MESSAGE_LIMIT, token);
 
         if (!messagesResponse.success) {
@@ -34,7 +32,6 @@ export const useMessages = (setMessages: Dispatch<SetStateAction<TMessage[]>>, c
         }
 
         setOffset(o => o += MESSAGE_OFFSET);
-        setIsLoading(false);
         setMessages((prevMessages) => [...prevMessages, ...messagesResponse.data]);
     };
 
@@ -68,6 +65,6 @@ export const useMessages = (setMessages: Dispatch<SetStateAction<TMessage[]>>, c
         setIsLoading,
         hasMore,
         setHasMore,
-        getMoreMessges,
+        getMoreMessages,
     };
 };

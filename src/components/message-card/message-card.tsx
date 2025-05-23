@@ -17,7 +17,7 @@ export default function MessageCard({ message, userId }: MessageDetails) {
     const { displayedDate, isDisplayed, setIsDisplayed } = useFormatFullDate(message.date);
 
     return (
-        <div onClick={() => setIsDisplayed(prevState => !prevState)} className={`mb-1 w-full flex flex-col justify-center ${message.senderId === userId ? "items-end" : "items-start"} ${message.senderId === userId ? "mr-2" : "ml-2"}`}>
+        <div onClick={() => setIsDisplayed(prevState => !prevState)} className={`mb-1 w-full flex flex-col justify-center ${message.senderId === userId ? "items-end" : "items-start"}`}>
             {isDisplayed && <div className="flex w-full items-center justify-center text-foreground">
                 {displayedDate}
             </div>}
