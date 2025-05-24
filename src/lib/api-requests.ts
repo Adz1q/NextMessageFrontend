@@ -39,6 +39,7 @@ type TMessage = {
     id: number;
     chatId: number;
     senderId: number;
+    senderUsername: string;
     content: string;
     date: string;
 };
@@ -70,6 +71,14 @@ type PrivateChat = {
     id: number;
     lastUpdated: string;
 };
+
+type TeamChat = {
+    id: number;
+    profilePictureUrl: string,
+    name: string,
+    admin_id: number;
+    lastUpdated: string;
+}
 
 export const getUser = async (login: string, token: string): Promise<ApiResponse<User>> => {
     try {
@@ -518,6 +527,27 @@ export const createTeamChat = async (name: string, adminId: number, memberIds: n
         return {
             success: false,
             error: responseError.message
+        };
+    }
+};
+
+export const getChat = async (chatId: number, userId: number, token: string): Promise<ApiResponse<TeamChat | PrivateChat>> => {
+    try {
+        const response = await api.get<TeamChat | PrivateChat>(`/chat/get/${chatId}?userId=${userId}`, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+
+        return {
+            success: true,
+            data: response.data,
+        };
+    }
+    catch (error: unknown) {
+        const responseError = error as AxiosError;
+
+        return {
+            success: false,
+            error: responseError.message,
         };
     }
 };

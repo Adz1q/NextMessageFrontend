@@ -10,6 +10,7 @@ type TMessage = {
     id: number;
     chatId: number;
     senderId: number;
+    senderUsername: string;
     content: string;
     date: string;
 };
@@ -22,7 +23,7 @@ type ChatMember = {
     isFriend: boolean;
 };
 
-export const usePrivateChat = (chatId: number, token: string, userId: number, otherMember: ChatMember) => {
+export const usePrivateChat = (chatId: number, token: string, userId: number, username: string, otherMember: ChatMember) => {
     const [messages, setMessages] = useState<TMessage[]>([]);
     const [newMessage, setNewMessage] = useState("");
     const [stompClient, setStompClient] = useState<Client | null>(null);
@@ -125,6 +126,7 @@ export const usePrivateChat = (chatId: number, token: string, userId: number, ot
             const chatMessage = {
                 chatId: chatId,
                 senderId: userId,
+                senderUsername: username,
                 content: newMessage,
             };
 

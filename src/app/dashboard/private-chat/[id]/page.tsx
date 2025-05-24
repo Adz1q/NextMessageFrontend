@@ -27,6 +27,6 @@ export default async function PrivateChatPage({ params }: {
     }    
     
     return (
-        <PrivateChatCard chatId={parseInt(id)} otherMember={otherMember.data} token={session?.user?.token} userId={parseInt(session?.user?.id)} />
+        <PrivateChatCard chatId={parseInt(id)} username={session?.user?.username} otherMember={otherMember.data} token={session?.user?.token} userId={parseInt(session?.user?.id)} />
     );
 }

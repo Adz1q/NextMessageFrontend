@@ -1,75 +1,60 @@
-"use client"; 
+"use client";
 
-import { useRef } from "react";
-import { Button } from "../ui/button";
-import { Loader2, MessageCircle, PhoneCall, Send, UserPlus, Video, X } from "lucide-react";
-import { Input } from "../ui/input";
-import MessageCard from "../message-card/message-card";
+import { Loader2, MessageCircle, MoreHorizontal, PhoneCall, Send, Video } from "lucide-react";
 import { Avatar, AvatarImage } from "../ui/avatar";
-import { usePrivateChat } from "@/hooks/usePrivateChat";
+import { Button } from "../ui/button";
+import { useTeamChat } from "@/hooks/useTeamChat";
 import { useMessages } from "@/hooks/useMessages";
-import InfiniteScroll from 'react-infinite-scroll-component';
+import { Input } from "../ui/input";
+import { useRef } from "react";
+import InfiniteScroll from "react-infinite-scroll-component";
+import TeamMessageCard from "../team-message-card/team-message-card";
 
-type ChatMember = {
-    id: number;
-    username: string;
-    profilePictureUrl: string;
-    date: string;
-    isFriend: boolean;
-};
-
-type ChatDetails = {
-    chatId: number;
-    otherMember: ChatMember;
-    token: string;
-    username: string;
-    userId: number;
-};
-
-export default function PrivateChatCard({ chatId, otherMember, userId, username, token }: ChatDetails) {
-    const { 
+export default function TeamChatCard({ 
+    chatId, 
+    userId,
+    username, 
+    token 
+}: {
+    chatId: number,
+    userId: number,
+    username: string,
+    token: string
+}) {
+    const {
+        chat,
+        error,
+        sendMessage,
         messages,
         setMessages,
-        newMessage, 
-        setNewMessage, 
-        sendMessage,
-        isFriendshipRequestSent,
-        handleSendFriendshipRequest,
-        error,
-        isFriend,
-        handleRemoveFriend
-    } = usePrivateChat(chatId, token, userId, username, otherMember);
+        newMessage,
+        setNewMessage
+    } = useTeamChat(chatId, userId, username, token);
 
     const { 
         isLoading,
         hasMore,
-        getMoreMessages,
+        getMoreMessages
     } = useMessages(setMessages, chatId, userId, token);
 
     const scrollableRef = useRef<HTMLDivElement>(null);
-
-
+    
     return (
         <div className="flex flex-col h-full">
-            <div className="flex items-center justify-between p-4 border-b">
+          <div className="flex items-center justify-between p-4 border-b">
                 <div className="flex items-center justify-center gap-4">
                     <Avatar>
-                        <AvatarImage src={otherMember.profilePictureUrl} className="w-25 h-25" alt="User"/>
+                        <AvatarImage src={chat?.profilePictureUrl} className="w-25 h-25" alt="User"/>
                     </Avatar>
                     <div className="font-medium">
-                        {otherMember.username}
+                        {chat?.name}
                     </div>
-                    <Button onClick={handleSendFriendshipRequest} variant="ghost" className={isFriend || isFriendshipRequestSent ? "hidden" : "inline"}>
-                        <UserPlus />
-                    </Button>
-                    <Button onClick={handleRemoveFriend} variant="ghost" className={isFriend ? "inline" : "hidden"}>
-                        <X />
-                    </Button>
                     {error && <div className="text-red-900">{error}</div>}
                 </div>
                 <div>
                     <Button variant="ghost"><PhoneCall /></Button>
                     <Button variant="ghost"><Video /></Button>
+                    <Button variant="ghost"><MoreHorizontal/></Button>
                 </div>
             </div>
             <div
@@ -100,7 +85,7 @@ export default function PrivateChatCard({ chatId, otherMember, userId, username,
                     }
                 >
                     {messages.sort((a, b) => b.id - a.id).map((message, index) => (
-                        <MessageCard key={index} message={message} userId={userId}/>
+                        <TeamMessageCard key={index} message={message} userId={userId}/>
                     ))}
                 </InfiniteScroll>
                 {!isLoading && messages.length === 0 && (
@@ -129,5 +114,5 @@ export default function PrivateChatCard({ chatId, otherMember, userId, username,
                 </Button>
             </form>
         </div>
-    ); 
+    );
 }

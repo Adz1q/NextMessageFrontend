@@ -7,6 +7,7 @@ type TMessage = {
     id: number;
     chatId: number;
     senderId: number;
+    senderUsername: string;
     content: string;
     date: string;
 };
