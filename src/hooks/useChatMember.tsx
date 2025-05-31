@@ -1,32 +1,17 @@
 "use client";
 
-import { createPrivateChat, getPrivateChatByMembers, sendFriendshipRequest } from "@/lib/api-requests";
-import { Session } from "next-auth";
+import { changeTeamChatAdmin, createPrivateChat, getPrivateChatByMembers, removeTeamChatMember, sendFriendshipRequest } from "@/lib/api-requests";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-type FoundUser = {
+type TeamChatMember = {
     id: number;
+    userId: number;
+    chatId: number;
     username: string;
     profilePictureUrl: string;
-    date: string;
     allowMessagesFromNonFriends: boolean;
-};
-
-type Friend = {
-    id: number;
-    username: string;
-    profilePictureUrl: string;
-    friendshipId: number;
-    date: string;
-};
-
-type Chat = {
-    id: number;
-    name: string;
-    lastUpdated: string;
-    profilePictureUrl: string;
-    type: string;
+    friend: boolean
 };
 
 type FriendshipRequest = {
@@ -36,37 +21,30 @@ type FriendshipRequest = {
     date: string;
 };
 
-export const useFoundUserCard = ( 
-    foundUser: FoundUser,
-    friends: Friend[],
-    chats: Chat[],
+export const useChatMember = ( 
+    userId: number,
+    token: string,
+    member: TeamChatMember,
+    chatId: number,
     friendshipRequests: FriendshipRequest[],
-    session: Session,
 ) => {
     const [isFriendshipRequestSent, setIsFriendshipRequestSent] = useState(false);
-    const [isFriend, setIsFriend] = useState(false);
     const [error, setError] = useState("");
     const router = useRouter();
 
     useEffect(() => {
-        friends.forEach((friend) => {
-            if (foundUser.id === friend.id) {
-                setIsFriend(true);
-            }
-        });
-
         friendshipRequests.forEach((friendshipRequest) => {
-            if (foundUser.id === friendshipRequest.receiverId) {
+            if (friendshipRequest.receiverId == member?.id) {
                 setIsFriendshipRequestSent(true);
             }
         });
-    }, [friends, chats, friendshipRequests, foundUser, session?.user?.token]);
+    }, [friendshipRequests, member]);
 
     const handleStartNewConversation = async () => {
         const firstResult = await getPrivateChatByMembers(
-            parseInt(session?.user?.id),
-            foundUser.id,
-            session?.user?.token
+            userId,
+            member?.userId,
+            token
         );
 
         if (firstResult.success) {
@@ -76,31 +54,15 @@ export const useFoundUserCard = (
         }
 
         const secondResult = await createPrivateChat(
-            parseInt(session?.user?.id),
-            foundUser.id,
-            session?.user?.token
+            userId,
+            member?.id,
+            token
         );
 
         if (!secondResult.success) {
             setError(secondResult.error);
             return;
         }
-
-        // const thirdResult = await getPrivateChatByMembers(
-        //     parseInt(session?.user?.id),
-        //     foundUser.id,
-        //     session?.user?.token
-        // );
-
-        // if (!thirdResult.success) {
-        //     setError(thirdResult.error);
-        //     return;
-        // }
-
-        // setError("");
-
-        // const chatId = thirdResult.data;
-        // router.push(`/dashboard/private-chat/${chatId}`);
 
         setError("");
 
@@ -110,9 +72,9 @@ export const useFoundUserCard = (
 
     const handleSendFriendshipRequest = async () => {
         const result = await sendFriendshipRequest(
-            parseInt(session?.user?.id),
-            foundUser.id,
-            session?.user?.token
+            userId,
+            member.id,
+            token
         );
 
         if (!result.success) {
@@ -124,11 +86,46 @@ export const useFoundUserCard = (
         setIsFriendshipRequestSent(true);
     };
 
+    const handleRemoveTeamChatMember = async () => {
+        const result = await removeTeamChatMember(
+            chatId,
+            member?.userId,
+            userId,
+            token
+        );
+
+        if (!result.success) {
+            setError(result.error);
+            return;
+        }
+
+        setError("");
+    };
+
+    const handleChangeTeamChatAdmin = async () => {
+        const result = await changeTeamChatAdmin(
+            chatId,
+            userId,
+            member?.userId,
+            token
+        );
+
+        if (!result.success) {
+            setError(result.error);
+            return; 
+        }
+
+        setError("");
+    };
+
     return {
         isFriendshipRequestSent,
-        isFriend,
+        setIsFriendshipRequestSent,
         error,
+        setError,
         handleStartNewConversation,
         handleSendFriendshipRequest,
+        handleRemoveTeamChatMember,
+        handleChangeTeamChatAdmin,
     };
 };

@@ -18,7 +18,7 @@ export default function TeamMessageCard({ message, userId }: TeamMessageDetails)
     const { displayedDate, isDisplayed, setIsDisplayed } = useFormatFullDate(message.date);
 
     return (
-        <div onClick={() => setIsDisplayed(prevState => !prevState)} className={`mb-1 w-full flex flex-col justify-center ${message.senderId === userId ? "items-end" : "items-start"}`}>
+        <div onClick={() => setIsDisplayed(prevState => !prevState)} className={`mb-2 w-full flex flex-col justify-center ${message.senderId === userId ? "items-end" : "items-start"}`}>
             {isDisplayed && <div className="flex w-full items-center justify-center text-foreground">
                 {displayedDate}
             </div>}

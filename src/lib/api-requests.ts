@@ -74,11 +74,11 @@ type PrivateChat = {
 
 type TeamChat = {
     id: number;
-    profilePictureUrl: string,
-    name: string,
-    admin_id: number;
     lastUpdated: string;
-}
+    name: string,
+    profilePictureUrl: string,
+    adminId: number;
+};
 
 export const getUser = async (login: string, token: string): Promise<ApiResponse<User>> => {
     try {
@@ -550,4 +550,143 @@ export const getChat = async (chatId: number, userId: number, token: string): Pr
             error: responseError.message,
         };
     }
+};
+
+export const changeTeamChatName = async (chatId: number, userId: number, name: string, token: string): Promise<ApiResponse<null>> => {
+    try {
+        const DTO = {
+            chatId: chatId,
+            userId: userId,
+            name: name,
+        };
+
+        const response = await api.post("/chat/change/name", DTO, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (response.status !== 200) {
+            throw new Error(response.statusText);
+        }
+
+        return {
+            success: true,
+            data: null,
+        };
+    }
+    catch (error: unknown) {
+        const responseError = error as AxiosError;
+
+        return {
+            success: false,
+            error: responseError.message,
+        };
+    }
+};
+
+export const deleteTeamChat = async (chatId: number, userId: number, token: string): Promise<ApiResponse<string>> => {
+    try {
+        const response = await api.delete(`/chat/delete/${chatId}?userId=${userId}`, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+
+        return {
+            success: true,
+            data: response.data,
+        };
+    }
+    catch (error: unknown) {
+        const responseError = error as AxiosError;
+
+        return {
+            success: false,
+            error: responseError.message,
+        };
+    }
+};
+
+export const removeTeamChatMember = async (chatId: number, memberId: number, adminId: number, token: string): Promise<ApiResponse<string>> => {
+    try {
+        const response = await api.delete(`/chat/remove/${chatId}/member/${memberId}?adminId=${adminId}`, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+
+        return {
+            success: true,
+            data: response.data,
+        };
+    }
+    catch (error: unknown) {
+        const responseError = error as AxiosError;
+
+        return {
+            success: false,
+            error: responseError.message,
+        };
+    }
+};
+
+export const changeTeamChatAdmin = async (chatId: number, userId: number, newAdminId: number, token: string): Promise<ApiResponse<null>> => {
+    try {
+        const DTO = {
+            chatId: chatId,
+            userId: userId,
+            newAdminId: newAdminId
+        };
+
+        const response = await api.post("/chat/change/admin", DTO, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (response.status !== 200) {
+            throw new Error(response.statusText);
+        }
+
+        return {
+            success: true,
+            data: null,
+        };
+    }
+    catch (error: unknown) {
+        const responseError = error as AxiosError;
+
+        return {
+            success: false,
+            error: responseError.message,
+        };
+    }
+};
+
+export const addTeamChatMember = async (chatId: number, userId: number, newMemberId: number, token: string): Promise<ApiResponse<null>> => {
+    try {
+        const DTO = {
+            chatId: chatId,
+            userId: userId,
+            newMemberId: newMemberId,
+        };
+
+        const response = await api.post("/chat/add/member", DTO, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (response.status !== 200) {
+            throw new Error(response.statusText);
+        }
+
+        return {
+            success: true,
+            data: null,
+        };
+    }
+    catch (error: unknown) {
+        const responseError = error as AxiosError;
+
+        return {
+            success: false,
+            error: responseError.message,
+        };
+    }
+};
+
+export const leaveTeamChat = async () => {
+
 };

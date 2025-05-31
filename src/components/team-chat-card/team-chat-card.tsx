@@ -1,6 +1,6 @@
 "use client";
 
-import { Loader2, MessageCircle, MoreHorizontal, PhoneCall, Send, Video } from "lucide-react";
+import { Loader2, MessageCircle, MoreHorizontal, Send } from "lucide-react";
 import { Avatar, AvatarImage } from "../ui/avatar";
 import { Button } from "../ui/button";
 import { useTeamChat } from "@/hooks/useTeamChat";
@@ -9,6 +9,7 @@ import { Input } from "../ui/input";
 import { useRef } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import TeamMessageCard from "../team-message-card/team-message-card";
+import Link from "next/link";
 
 export default function TeamChatCard({ 
     chatId, 
@@ -52,9 +53,11 @@ export default function TeamChatCard({
                     {error && <div className="text-red-900">{error}</div>}
                 </div>
                 <div>
-                    <Button variant="ghost"><PhoneCall /></Button>
-                    <Button variant="ghost"><Video /></Button>
-                    <Button variant="ghost"><MoreHorizontal/></Button>
+                    <Link href={`/dashboard/team-chat/${chatId}/settings`}>
+                        <Button variant="ghost">
+                            <MoreHorizontal/>
+                        </Button>
+                    </Link>
                 </div>
             </div>
             <div

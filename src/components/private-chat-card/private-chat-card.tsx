@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 import { Button } from "../ui/button";
-import { Loader2, MessageCircle, PhoneCall, Send, UserPlus, Video, X } from "lucide-react";
+import { Loader2, MessageCircle, Send, UserPlus, X } from "lucide-react";
 import { Input } from "../ui/input";
 import MessageCard from "../message-card/message-card";
 import { Avatar, AvatarImage } from "../ui/avatar";
@@ -66,10 +66,6 @@ export default function PrivateChatCard({ chatId, otherMember, userId, username,
                         <X />
                     </Button>
                     {error && <div className="text-red-900">{error}</div>}
-                </div>
-                <div>
-                    <Button variant="ghost"><PhoneCall /></Button>
-                    <Button variant="ghost"><Video /></Button>
                 </div>
             </div>
             <div
