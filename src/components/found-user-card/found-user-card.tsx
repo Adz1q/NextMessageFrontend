@@ -52,6 +52,10 @@ export default function FoundUserCard({ foundUser, friends, chats, friendshipReq
         handleSendFriendshipRequest 
     } = useFoundUserCard(foundUser, friends, chats, friendshipRequests, session);
 
+    if (foundUser.id === parseInt(session?.user?.id)) {
+        return null;
+    }
+
     return (
         <div className="flex items-center justify-between max-w-md">
             <div className="flex items-center font-500">
