@@ -9,6 +9,8 @@ import ChangeTeamChatName from "../change-team-chat-name/change-team-chat-name";
 import { useTeamChatSettings } from "@/hooks/useTeamChatSettings";
 import DeleteTeamChat from "../delete-team-chat/delete-team-chat";
 import ChatMembers from "../chat-members/chat-members";
+import LeaveTeamChat from "../leave-team-chat/leave-team-chat";
+import AddTeamChatMembers from "../add-team-chat-members/add-team-chat-members";
 
 export default function TeamChatSettingsCard({ 
     chatId,
@@ -61,13 +63,13 @@ export default function TeamChatSettingsCard({
                         <ChangeTeamChatName userId={userId} token={token} chatId={chatId}/>
                     </TabsContent>
                     <TabsContent value="addMembers" className="mt-0">
-                        {/*{chat && <AddChatMembers chat={chat} userId={userId} token={token}/>} */}
+                        <AddTeamChatMembers chatId={chatId} userId={userId} token={token}/>
                     </TabsContent>
                     <TabsContent value="manageMembers" className="mt-0">
                         {chat && <ChatMembers chat={chat} userId={userId} token={token}/>}
                     </TabsContent>
                     <TabsContent value="leaveChat" className="mt-0">
-                        {/* <LeaveChat chatId={chatId} userId={userId} token={token}/> */}
+                        <LeaveTeamChat chatId={chatId} userId={userId} token={token}/>
                     </TabsContent>
                     <TabsContent value="deleteChat" className="mt-0">
                         <DeleteTeamChat chat={chat} userId={userId} token={token}/>

@@ -28,14 +28,14 @@ export default function ChatMembers({
 
     return (
         <div className="flex flex-col">
-            <div className="w-full rounded-md p-3 text-2xl flex items-center justify-center gap-2"><Users /> Chat Members</div>
+            <div className="w-full rounded-md p-3  pt-5 text-2xl flex items-center justify-center gap-2"><Users /> Chat Members</div>
             {members.length <= 0 && 
                 <p className="text-sm text-muted-foreground py-3 text-center">
                     Your chat has currently no members.
                 </p>
             }
             {members.length > 0 && (
-                <ScrollArea className="h-[45rem] w-full rounded-md rounded-t-none p-3 flex flex-col gap-8">
+                <ScrollArea className="h-[40rem] w-full rounded-md rounded-t-none p-3 flex flex-col gap-8">
                     <div className="space-y-3">
                         {members.map((member, index) => (
                             <ChatMember key={index} chatId={chat?.id} member={member} adminId={chat?.adminId} userId={userId} token={token} friendshipRequests={friendshipRequests}/>

@@ -656,12 +656,12 @@ export const changeTeamChatAdmin = async (chatId: number, userId: number, newAdm
     }
 };
 
-export const addTeamChatMember = async (chatId: number, userId: number, newMemberId: number, token: string): Promise<ApiResponse<null>> => {
+export const addTeamChatMembers = async (chatId: number, userId: number, newMemberIds: number[], token: string): Promise<ApiResponse<null>> => {
     try {
         const DTO = {
             chatId: chatId,
             userId: userId,
-            newMemberId: newMemberId,
+            newMemberIds: newMemberIds,
         };
 
         const response = await api.post("/chat/add/member", DTO, {
@@ -687,6 +687,23 @@ export const addTeamChatMember = async (chatId: number, userId: number, newMembe
     }
 };
 
-export const leaveTeamChat = async () => {
+export const leaveTeamChat = async (chatId: number, userId: number, token: string): Promise<ApiResponse<string>> => {
+    try {
+        const response = await api.delete(`/chat/${chatId}/leave?userId=${userId}`, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
 
+        return {
+            success: true,
+            data: response.data,
+        };
+    }
+    catch (error: unknown) {
+        const responseError = error as AxiosError;
+
+        return {
+            success: false,
+            error: responseError.message,
+        };
+    }
 };

@@ -1,6 +1,5 @@
 "use client";
 
-import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Button } from "../ui/button";
 import { useChatMember } from "@/hooks/useChatMember";
@@ -54,13 +53,9 @@ export default function ChatMember({
                         <AvatarImage src={member.profilePictureUrl} alt={member?.username} />
                         <AvatarFallback>{getAvatarFallback(member.username)}</AvatarFallback>
                     </Avatar>
-                    <span
-                        className={cn(
-                        "font-medium text-sm"
-                        )}
-                    > {/* cn makes that there can be js code and you don't need to write it in a single line*/}
-                    {member.username}
-                </span>
+                    <span className="font-medium text-sm">
+                        {member.username}
+                    </span>
                 </div>
                 <div className="flex items-center gap-2">
                     <Button onClick={handleChangeTeamChatAdmin} variant="outline" size="sm" className={userId === adminId  && member?.userId !== adminId ? "visible" : "invisible"}>

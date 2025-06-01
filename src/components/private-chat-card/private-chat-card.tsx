@@ -84,10 +84,11 @@ export default function PrivateChatCard({ chatId, otherMember, userId, username,
                     hasMore={hasMore}
                     scrollableTarget="scrollableDiv"
                     loader={
-                        <div className="flex flex-col items-center justify-center flex-grow text-muted-foreground min-h-[200px]">
-                            <Loader2 className="h-10 w-10 animate-spin text-primary mb-4" />
-                            <p>Loading messages...</p>
-                        </div>
+                        // <div className="flex flex-col items-center justify-center flex-grow text-muted-foreground min-h-[200px]">
+                        //     <Loader2 className="h-10 w-10 animate-spin text-primary mb-4" />
+                        //     <p>Loading messages...</p>
+                        // </div>
+                        null
                     }
                     endMessage={
                         <div className="text-center text-muted-foreground text-xs py-2">
