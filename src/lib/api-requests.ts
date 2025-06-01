@@ -707,3 +707,24 @@ export const leaveTeamChat = async (chatId: number, userId: number, token: strin
         };
     }
 };
+
+export const isMemberOfChat = async (chatId: number, userId: number, token: string): Promise<ApiResponse<boolean>> => {
+    try {
+        const response = await api.get<boolean>(`/chat/${chatId}/isMember?userId=${userId}`, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+
+        return {
+            success: true,
+            data: response.data,
+        };
+    }
+    catch (error: unknown) {
+        const responseError = error as AxiosError;
+
+        return {
+            success: false,
+            error: responseError.message,
+        };
+    }
+};

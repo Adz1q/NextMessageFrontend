@@ -3,27 +3,27 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider/theme-provider";
 
 export const metadata: Metadata = {
-  title: "NextMessage",
-  description: "Best messaging and video call app in the world!",
+    title: "NextMessage",
+    description: "Best messaging and video call app in the world!",
 };
 
 export default function RootLayout({
-  children,
+    children,
 }: Readonly<{
-  children: React.ReactNode;
+    children: React.ReactNode;
 }>) {
-  return (
-    <html lang="en-EN" suppressHydrationWarning>
-      <body>
-        <ThemeProvider 
-          attribute="class"
-          defaultTheme="dark" 
-          enableSystem 
-          disableTransitionOnChange
-        >
-          {children}
-        </ThemeProvider>
-      </body>
-    </html>
-  );
+    return (
+      <html lang="en-EN" suppressHydrationWarning>
+          <body>
+              <ThemeProvider 
+                attribute="class"
+                defaultTheme="dark" 
+                enableSystem 
+                disableTransitionOnChange
+              >
+                {children}
+              </ThemeProvider>
+          </body>
+      </html>
+    );
 }
