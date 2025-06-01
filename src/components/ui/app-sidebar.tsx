@@ -12,6 +12,7 @@ import { useChangeSidebarList } from "@/hooks/useChangeSidebarList";
 import ChatList from "../chat-list/chat-list";
 import FriendList from "../friend-list/friend-list";
 import FriendshipRequestList from "../friendship-request-list/friendship-request-list";
+import { redirect } from "next/navigation";
 
 export function AppSidebar({ session }: { 
     session: Session | null
@@ -27,7 +28,7 @@ export function AppSidebar({ session }: {
     } = useChangeSidebarList();
 
     if (!session?.user) {
-        throw new Error("Invalid session!");
+	redirect("/");
     } 
 
     return (
